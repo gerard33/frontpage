@@ -1,0 +1,10 @@
+@import url('frontpage-day.css');
+
+body,html{
+    margin: 1px 0px 0px -7.5px;
+    padding: 0px 0px 0px 0px;
+}
+
+#frame {
+	padding: 0px 2px 0px 2px;
+}

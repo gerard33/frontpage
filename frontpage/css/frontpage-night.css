@@ -1,0 +1,388 @@
+body,html{
+    height: 100%;
+    margin: 0px;
+    padding: 25px 0px 0px 0px;
+	background-color: black;
+	background-image: url('images/night_y.jpg');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: top;
+}
+
+div#cnt {
+    width: 990px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.swipe {
+  overflow: hidden;
+  visibility: hidden;
+  position: relative;
+}
+.swipe-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.swipe-wrap > div {
+  float:left;
+  width:100%;
+  min-height: 100%;
+  position: relative;
+}
+.v-wrap{
+    height: 100%;
+    white-space: nowrap;
+    text-align: center;
+}
+.v-wrap:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    margin-right: -.25em;
+    height: 100%; 
+}
+.v-box{
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+}
+
+
+a, a:visited { text-decoration: none; color: #ADABAE; }
+a:hover { text-decoration: none; color: #ADABAE; }
+
+#frame {
+	float: left;
+	margin: 0px;
+	padding: 0px 2px 0px 2px;
+}
+
+#ls_cell1, #ls_cell1a, #ls_cell2, #ls_cell2a, #ls_cell3, #ls_cell4, #ls_cell4a,
+#ls_cell5, #ls_cell5a, #ls_cell6, #ls_cell7, #ls_cell8, #ls_cell9,
+#ls_cell10, #ls_cell11, #ls_cell12, #ls_cell13, #ls_cell14,
+#ls_cell15, #ls_cell16, #ls_cell17, #ls_cell18, #ls_cell19,
+#ls_cell20, #ls_cell21, #ls_cell22, #ls_cell23, #ls_cell24, #ls_cell25, 
+#ls_cell2_1, #ls_cell2_1a, #ls_cell2_2, #ls_cell2_2a, #ls_cell2_3, #ls_cell2_4, #ls_cell2_4a,
+#ls_cell2_5, #ls_cell2_5a, #ls_cell2_6, #ls_cell2_7, #ls_cell2_8, #ls_cell2_9,
+#ls_cell2_10, #ls_cell2_11, #ls_cell2_12, #ls_cell2_13, #ls_cell2_14,
+#ls_cell2_15, #ls_cell2_16, #ls_cell2_17, #ls_cell2_18, #ls_cell2_19,
+#ls_cell2_20, #ls_cell2_21, #ls_cell2_22, #ls_cell2_23, #ls_cell2_24, #ls_cell2_25
+ {
+	font-family: arimo;
+	font-weight: normal;
+	//font-style: italic;
+	text-transform: uppercase;
+	color: #ADABAE;
+	font-size: 11px;
+	margin-top: -27px;
+	height: 27px;
+	line-height: 68px;
+	position: relative;
+	z-index: 40;
+}
+
+#desc_cell1, #desc_cell2, #desc_cell3, #desc_cell4,
+#desc_cell5, #desc_cell6, #desc_cell7, #desc_cell8, #desc_cell9,
+#desc_cell10, #desc_cell11, #desc_cell12, #desc_cell13, #desc_cell14,
+#desc_cell15, #desc_cell16, #desc_cell17, #desc_cell18, #desc_cell19,
+#desc_cell20, #desc_cell21, #desc_cell22, #desc_cell23, #desc_cell24, #desc_cell25, 
+#desc_cell2_1, #desc_cell2_2, #desc_cell2_3, #desc_cell2_4,
+#desc_cell2_5, #desc_cell2_6, #desc_cell2_7, #desc_cell2_8, #desc_cell2_9,
+#desc_cell2_10, #desc_cell2_11, #desc_cell2_12, #desc_cell2_13, #desc_cell2_14,
+#desc_cell2_15, #desc_cell2_16, #desc_cell2_17, #desc_cell2_18, #desc_cell2_19,
+#desc_cell2_20, #desc_cell2_21, #desc_cell2_22, #desc_cell2_23, #desc_cell2_24, #desc_cell2_25
+ {
+	font-family: arimo;
+	font-weight: normal;
+	text-transform: uppercase;
+	color: #ADABAE;
+	font-size: 14px;
+	margin-top: -20px;
+	height: 25px;
+	line-height: 18px;
+	position: relative;
+	z-index: 30;
+}
+
+#bottom_cell1, #bottom_cell2, #bottom_cell4, #bottom_cell5, #bottom_cell6, #bottom_cell7, #bottom_cell8, #bottom_cell9,
+#bottom_cell10, #bottom_cell11, #bottom_cell12, #bottom_cell13, #bottom_cell14, #bottom_cell15, #bottom_cell16, #bottom_cell17, #bottom_cell18, #bottom_cell19,
+#bottom_cell20, #bottom_cell21, #bottom_cell23,
+#bottom_cell2_1, #bottom_cell2_2, #bottom_cell2_3, #bottom_cell2_4, #bottom_cell2_5, #bottom_cell2_6, #bottom_cell2_7, #bottom_cell2_8, #bottom_cell2_9,
+#bottom_cell2_10, #bottom_cell2_11, #bottom_cell2_12, #bottom_cell2_13, #bottom_cell2_14, #bottom_cell2_15, #bottom_cell2_16, #bottom_cell2_17, #bottom_cell2_18, #bottom_cell2_19,
+#bottom_cell2_20, #bottom_cell2_21, #bottom_cell2_23, #bottom_cell2_25
+{
+	margin: -26px 1px 6px 1px;
+	height: 20px;
+	//background: #505050;
+	//background: #2E2E38;
+	background: #414141;
+	opacity: 1;
+	position: relative;
+	z-index: 25;
+	-webkit-border-radius: 0px 0px 4px 4px;
+	border-radius: 0px 0px 4px 4px;
+}
+
+/*
+#cell3, #cell25
+{
+	font-family: arimo, serif;
+	font-weight: bold;
+	width: 277px;
+	padding: 5px;
+	border: 1px solid #666;
+	height: 217px;	
+	line-height: 210px; 
+	font-size: 90px;	
+	color: #c0c0c0;
+	margin: 0px ;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	//background-color: #35353F;
+	//opacity: 1;
+	position: relative;
+	z-index: 20;
+}*/
+
+#cell3, #cell25,
+#cell2_3, #cell2_25
+{
+	font-family: arimo, serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	width: 277px;
+	padding: 5px;
+	border: 1px solid #666;
+	height: 217px;
+	line-height: 210px; 		
+	//font-size: 90px;
+	color: #ADABAE !important;
+	font-size: 30px;	
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	//background-color: #35353F;
+	//opacity: 1;
+	position: relative;
+	z-index: 20;
+}
+
+#cell1, #cell2, #cell4, #cell5, 
+#cell6, #cell7, #cell8, #cell9, #cell10, 
+#cell11, #cell12, #cell13, #cell14, #cell15, 
+#cell16, #cell17, #cell18, #cell19, #cell20, 
+#cell21, #cell22, #cell23,
+#cell2_1, #cell2_2, #cell2_4, #cell2_5, 
+#cell2_6, #cell2_7, #cell2_8, #cell2_9, #cell2_10, 
+#cell2_11, #cell2_12, #cell2_13, #cell2_14, #cell2_15, 
+#cell2_16, #cell2_17, #cell2_18, #cell2_19, #cell2_20, 
+#cell2_21, #cell2_22, #cell2_23
+{
+	font-family: arimo, serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	width: 162px;
+	padding: 10px;
+	border: 1px solid #666;
+	height: 90px;
+	line-height: 75px; 		
+	//font-size: 90px;
+	color: #ADABAE !important;
+	font-size: 30px;	
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;	
+	position: relative;
+	cursor: pointer;
+	z-index: 20;
+}
+
+#cell1a, #cell1b, #cell2a, #cell2b, #cell4a, #cell4b, #cell5a, #cell5b,
+#cell2_1a, #cell2_1b, #cell2_2a, #cell2_2b, #cell2_4a, #cell2_4b, #cell2_5a, #cell2_5b
+{
+	font-family: arimo, serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin: -15px 0px -42px 0px;
+	color: #ADABAE !important;
+	font-size: 30px;
+	position: relative;
+	z-index:20;
+}
+
+#bcell6, #bcell7, #bcell8, #bcell9, #bcell10, 
+#bcell11, #bcell12, #bcell13, #bcell14, #bcell15, 
+#bcell16, #bcell17, #bcell18, #bcell19, #bcell20, 
+#bcell21, #bcell22, #bcell23,
+#bcell2_6, #bcell2_7, #bcell2_8, #bcell2_9, #bcell2_10, 
+#bcell2_11, #bcell2_12, #bcell2_13, #bcell2_14, #bcell2_15, 
+#bcell2_16, #bcell2_17, #bcell2_18, #bcell2_19, #bcell2_20, 
+#bcell2_21, #bcell2_22, #bcell2_23   
+     {
+	//width: 162px;
+	margin: -86px 0px 0px 0px;
+	padding: 10px 10px 6px 10px;
+	height: 70px;
+	//height: 70px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;	
+	background-color: #35353F;
+	opacity: 0.7;
+	position: relative;
+	z-index: 1;
+}
+
+#bcell1, #bcell2, #bcell4, #bcell5,
+#bcell2_1, #bcell2_2, #bcell2_4, #bcell2_5
+{
+	//width: 162px;
+	margin: -111px 0px 0px 0px;
+	padding: 10px 10px 6px 10px;
+	height: 95px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;	
+	background-color: #35353F;
+	opacity: 0.7;
+	position: relative;
+	z-index: 1;
+}
+
+#bcell3, #bcell25,
+#bcell2_3, #bcell2_25
+{
+	//width: 277px;
+	margin: -229px 0px -1px 1px;
+	//padding: 5px;
+	//border: 1px solid #666;
+	height: 229px;	
+	line-height: 210px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;	
+	background-color: #35353F;
+	opacity: 0.7;
+	position: relative;
+	z-index: 1;	
+}
+
+#cell6,  #cell7, #cell8, #cell9, #cell10,   #iframe,
+#cell11, #cell12, #cell13, #cell14, #cell15,
+#cell16, #cell17, #cell18, #cell19, #cell20, 
+#cell21, #cell22, #cell23, 
+#cell2_6,  #cell2_7, #cell2_8, #cell2_9, #cell2_10,  
+#cell2_11, #cell2_12, #cell2_13, #cell2_14, #cell2_15,
+#cell2_16, #cell2_17, #cell2_18, #cell2_19, #cell2_20, 
+#cell2_21, #cell2_22, #cell2_23 
+{
+	height: 65px;
+	line-height: 55px;
+	color: #999;
+}
+
+#cell8, #cell13, #cell18, 
+#cell2_8, #cell2_13, #cell2_18 
+{ 
+	width: 184px; 
+}
+
+#cell22,
+#cell2_22 
+{ 
+	width: 560px; 
+	font-size: 22px;
+	line-height: 35px;
+}
+
+#all { 
+	margin-left: -35px; 
+	margin-top: 5px; 
+	width: 1050px;height: 570px;	
+}
+#popup_switch, #popup_protected, #popup_camera, #popup_camera2{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 75px;
+    margin-left: -150px;
+    margin-top: -100px;                 
+    padding: 10px;
+    border: 2px #c0c0c0;
+    background: #333;
+    z-index:1002;
+    overflow:visible;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: bold;
+	font-size: 25px;
+	color: #c0c0c0;
+	line-height: 75px;
+	text-align: center;	
+	-webkit-border-radius: 15px 15px 15px 15px;
+	border-radius: 15px 15px 15px 15px;	
+}
+#popup_camera{
+    width: 640px;
+    height: 480px;
+    margin-left: -325px;
+    margin-top: -245px;                 
+
+}
+#popup_camera2 {
+    width: 640px;
+    height: 480px;
+    margin-left: -325px;
+    margin-top: -245px;                 
+}
+#fade{
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index:1001;
+    -moz-opacity: 0.7;
+    opacity:.70;
+    filter: alpha(opacity=70);
+}
+.camera {
+  background: url(offline.jpg) no-repeat;
+  -moz-opacity: 0.7;
+  opacity:.70;
+  filter: alpha(opacity=70);
+  background-size: 272px 216px;
+  width: 270px;
+  height: 216px;
+}
+
+/*
+    Colorbox Core Style:
+    The following CSS is consistent between example themes and should not be altered.
+*/
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#cboxWrapper {max-width:none;}
+#cboxOverlay{position:fixed; width:100%; height:100%;}
+#cboxMiddleLeft, #cboxBottomLeft{clear:left;}
+#cboxContent{position:relative;}
+#cboxLoadedContent{overflow:auto; -webkit-overflow-scrolling: touch;}
+#cboxTitle{margin:0;}
+#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%; height:100%;}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
+.cboxPhoto{float:left; margin:auto; border:0; display:block; max-width:none; -ms-interpolation-mode:bicubic;}
+.cboxIframe{width:100%; height:100%; display:block; border:0; padding:0; margin:0;}
+#colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
+
+
+/* 
+    User Style:
+    Change the following styles to modify the appearance of Colorbox.  They are
+    ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#cboxOverlay{background:url(images/overlay.png) repeat 0 0; opacity: 0.9; filter: alpha(opacity = 90);}
+#colorbox{outline:0;}
+     #cboxContent{background:#fff; overflow:hidden;}
+
+a {
+outline-style:none;
+}
