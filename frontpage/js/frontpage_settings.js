@@ -96,7 +96,7 @@ $(document).ready(function() {
 		$.sonosurl_volume_up="http://192.168.1.102/domoticz/sonos/sonos.volume.up-"; // used in frontpage.js to find php file for volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos, format: sonos.volume.up-<idx>.php
 		$.sonosurl_volume_down="http://192.168.1.102/domoticz/sonos/sonos.volume.down-"; // used in frontpage.js to find php file for volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos
 		$.sonosurl_get_volume="http://192.168.1.102/domoticz/sonos/sonos.get.volume-"; // used in frontpage.js to find php file to get volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos
-		$.sonosext=".php"; // used for extension of Sonos php files
+		$.sonosext=".php"; // used for extension of Sonos php files, will change due to other Sonos implementation
         //format: idx, value, label, description,lastseen(1 when lastseen is wanted, 2 is only time) ,plusmin button or protected (1 for buttons, 2 for volume of Sonos, 4 for protected), [override css], [alarm value]
         $.PageArray = [
 
