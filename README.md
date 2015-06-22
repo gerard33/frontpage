@@ -1,25 +1,30 @@
-# frontpage
-Domoticz frontpage
+## Domoticz Frontpage
 
 See http://www.domoticz.com/forum/viewtopic.php?f=8&t=4698.
 
-More information will be added
+## Introduction
 
-Installation instructions when using domoticz www folder
-1) copy the files from the frontpage map to domoticz/www
-   so the frontpage.html and the subfolders file needs to be in domoticz/www
+Setting up the frontpage requires some time. Please take a good look at the forum topic mentioned above and the (high level) instructions below.
+It will take some time and a lot of trial and error but it is definitely worth it!
+
+## Installation instructions when using domoticz www folder
+1) copy the files from the frontpage map to domoticz/www so the frontpage.html and the subfolders file needs to be in domoticz/www
+
 2) edit frontpage_settings.js
-  a) edit url of domoticz
-  b) edit switches (idx, descriptions, etc)
+   a) edit url of domoticz
+   
+   b) edit switches (idx, descriptions, etc)
 
-
-Installation instructions when using webserver (eg Synology)
+## Installation instructions when using webserver (eg Synology)
 1) copy the complete frontpage folder to /volume1/web
-2) edit frontpage_settings.js
-  a) edit url of domoticz
-  b) edit switches (idx, descriptions, etc)
 
-If you have a Sonos
+2) edit frontpage_settings.js
+
+   a) edit url of domoticz
+   
+   b) edit switches (idx, descriptions, etc)
+
+## If you have a Sonos
 1) Add the Sonos as a dummy switch in Domoticz
 2) Check the idx of this switch
 3) In the On command of the switch place: http://<yourip>/<folder>/frontpage/sonos/index.php?zone=<idx>&action=Play
