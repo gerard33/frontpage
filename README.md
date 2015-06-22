@@ -31,4 +31,3 @@ It will take some time and a lot of trial and error but it is definitely worth i
 4) In the Off command of the switch place: http://<yourip>/<folder>/frontpage/sonos/index.php?zone=<idx>&action=Stop
 5) Edit config.php in sonos folder, fill in the idx and the ip address
 6) Volume of Sonos can also be changed via the frontpage, in the frontpage_settings.js file set the plusmin button to value 2 (see the example)
-
