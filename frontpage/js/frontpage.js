@@ -21,9 +21,8 @@ function lightbox_close(id)
 <!-- Check volume of Sonos -->
 function VolumeSonos(idx) {
 	return $.ajax({
-    //url: "http://192.168.1.102/domoticz/sonos/sonos.give.volume-kantoor.php",
-	url: $.sonosurl_get_volume + idx + $.sonosext,
-    type: 'get',
+    url: "sonos/index.php?zone=" + idx + "&action=GetVolume",
+	type: 'get',
     dataType: 'html',
     async: false
     }).responseText
@@ -179,9 +178,11 @@ function RefreshData()
 			var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeVolumeUp(" + item.idx + ")>"; //volume up when Sonos is on
 			var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeVolumeDown(" + item.idx + ")>" //volume down when Sonos is on
 			if(show_sonos_volume == true) {			//get volume of sonos to show in desc text when frontpage_setting is set true
-				//function to trim value, somehow the volume of the Sonos kitchen contains an space
+				//function to change value, because <PRE></PRE> are added from Sonos index.php page
 				function myTrim(x) {
-					return x.replace(/^\s+|\s+$/gm,'');
+					//return x.replace(/^\s+|\s+$/gm,''); //trim spaces
+					var trimpart = /<PRE>|<\/PRE>/g;
+					return x.replace(trimpart,'');
 				}
 				var vs1 = myTrim(VolumeSonos(item.idx));
 				//console.log(vs1);
@@ -225,6 +226,17 @@ function RefreshData()
 			var up = '<img src=icons/sun_up_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
 			var down = '<img src=icons/sun_down_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
 			vdesc = vdesc + " | " + txt_zonoff; //Change description text
+		}
+		if (vdata == 'Stopped') {
+			if(IsNight == 'Yes') {
+				var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+			}
+			else {
+				var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+			}
+			var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+			var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+			vdesc = vdesc + " | " + txt_zonstopped; //Change description text
 		}
 		vdata = down.concat(hlp,up);
 		//console.log(vdata);
@@ -505,6 +517,10 @@ function RefreshData()
 	if(item.idx == idx_Tempf){
 		vdata=new String(vdata).replace( " C","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>");
 	}
+	// Change font for lux
+	if(item.idx == idx_LuxF){
+		vdata=new String(vdata).replace( "Lux","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
+	}
 	// Replace S from South to Z from Zuiden, E to O
 	if(item.idx == idx_WindRichting){
 		vdata=new String(vdata).replace( "S","Z");
@@ -591,6 +607,10 @@ function RefreshData()
 		vdata=txt_zonoff;
 		alarmcss=color_off;
 	}
+	//if (item.idx == idx_ZonV && vdata == 'Stopped'){
+	//	vdata=new String(vdata).replace( "Stopped", "Gestopt");
+	//	alarmcss=color_off;
+	//}
 	
 	//change text of blinds
 	if (item.idx == idx_ZonA && vdata == txt_on){
@@ -603,6 +623,10 @@ function RefreshData()
 		vdata=txt_zonoff;
 		alarmcss=color_off;
 	}
+	//if (item.idx == idx_ZonA && vdata == 'Stopped'){
+	//	vdata=new String(vdata).replace( "Stopped", "Gestopt");
+	//	alarmcss=color_off;
+	//}
 				
 	// if alarm threshold is defined, make value red
 	if (typeof valarm != 'undefined') {
@@ -965,8 +989,7 @@ function ChangeTherm(dimtype,stepsize,idx,currentvalue,thermmax)
 function ChangeVolumeUp(idx)
 	{
 	$.ajax({
-	//url: "http://192.168.1.102/domoticz/sonos/sonos.volume.up-" + idx + ".php",
-	url: $.sonosurl_volume_up + idx + $.sonosext,
+	url: "sonos/index.php?zone=" + idx + "&action=VolumeUp",
 	async: true,
 	dataType: 'json',
 	success: function(){
@@ -983,8 +1006,7 @@ function ChangeVolumeUp(idx)
 function ChangeVolumeDown(idx)
 	{
 	$.ajax({
-	//url: "http://192.168.1.102/domoticz/sonos/sonos.volume.down-" + idx + ".php",
-	url: $.sonosurl_volume_down + idx + $.sonosext,
+	url: "sonos/index.php?zone=" + idx + "&action=VolumeDown",
 	async: true,
 	dataType: 'json',
 	success: function(){

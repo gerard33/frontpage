@@ -18,3 +18,12 @@ Installation instructions when using webserver (eg Synology)
 2) edit frontpage_settings.js
   a) edit url of domoticz
   b) edit switches (idx, descriptions, etc)
+
+If you have a Sonos
+1) Add the Sonos as a dummy switch in Domoticz
+2) Check the idx of this switch
+3) In the On command of the switch place: http://<yourip>/<folder>/frontpage/sonos/index.php?zone=<idx>&action=Play
+4) In the Off command of the switch place: http://<yourip>/<folder>/frontpage/sonos/index.php?zone=<idx>&action=Stop
+5) Edit config.php in sonos folder, fill in the idx and the ip address
+6) Volume of Sonos can also be changed via the frontpage, in the frontpage_settings.js file set the plusmin button to value 2 (see the example)
+

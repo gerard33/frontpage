@@ -5,6 +5,7 @@ var txt_on = 'Aan';
 var txt_off = 'Uit';
 var txt_zonon = 'Dicht';
 var txt_zonoff = 'Open';
+var txt_zonstopped = 'Gestopt';
 var txt_zonstop = '| |';
 <!-- var txt_dim_plus = ' + '; -->
 <!-- var txt_dim_min = ' - '; -->
@@ -56,6 +57,7 @@ var idx_Garagedeur = '149';
 var idx_WindRichting = '100';
 var idx_WindSnelheid = '101';
 var idx_BewegingF = '145';
+var idx_LuxF = '147';
 var idx_ZonV = '110';
 var idx_ZonA = '111';
 var idx_Barometer = '49';
@@ -93,11 +95,7 @@ var doorbel_cmd = "lightbox_open('camera1', 15400);"
 $(document).ready(function() {
         $.roomplan=0;	// define roomplan in Domoticz and create items below.
         $.domoticzurl="http://192.168.1.102:8084";
-		$.sonosurl_volume_up="http://192.168.1.102/domoticz/sonos/sonos.volume.up-"; // used in frontpage.js to find php file for volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos, format: sonos.volume.up-<idx>.php
-		$.sonosurl_volume_down="http://192.168.1.102/domoticz/sonos/sonos.volume.down-"; // used in frontpage.js to find php file for volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos
-		$.sonosurl_get_volume="http://192.168.1.102/domoticz/sonos/sonos.get.volume-"; // used in frontpage.js to find php file to get volume of sonos, idx of virtual switch of sonos is used so you can have multiple Sonos
-		$.sonosext=".php"; // used for extension of Sonos php files, will change due to other Sonos implementation
-        //format: idx, value, label, description,lastseen(1 when lastseen is wanted, 2 is only time) ,plusmin button or protected (1 for buttons, 2 for volume of Sonos, 4 for protected), [override css], [alarm value]
+		//format: idx, value, label, description,lastseen(1 when lastseen is wanted, 2 is only time) ,plusmin button or protected (1 for buttons, 2 for volume of Sonos, 4 for protected), [override css], [alarm value]
         $.PageArray = [
 
 	['0','Desc',		'cell1',	'Kamer','0','0'], //Desc means show the sub cells
@@ -151,11 +149,13 @@ $(document).ready(function() {
 	['0','Desc',		'cell2_4',	'NAS CPU + HDD','0','0'],
 	['17','Data',		'cell2_4a',	'CPU','1','0'],
 	['13','Data',		'cell2_4b',	'HDD','0','0'],
-	['154','Data',		'cell2_5',	'Temperatuur Fibaro','1','0'],
+	['0','Desc',		'cell2_5',	'Temp + Lux F','1','0'],
+	['154','Data',		'cell2_5a',	'Temperatuur Fibaro','1','0'],
+	['147','Data',		'cell2_5b',	'Temperatuur Fibaro','1','0'],
 
 	['43','Level',		'cell2_6',	'Lamp slaapkamer','1','1'],
 	['21','Status',		'cell2_7',	'Slaapkamer kast','1','0'],
-	['0','Data',		'cell2_8',	'Zonnescherm (voor)','1','0'],
+	['145','Data',		'cell2_8',	'Bewegingssensor F','1','4'],
 	['32','Status',		'cell2_9',	'Led gang','1','0'],
 	['33','Status',		'cell2_10',	'Led zolder','1','0'],
 
@@ -166,14 +166,14 @@ $(document).ready(function() {
 	['46','Status',		'cell2_15',	'Vijver luchtpomp','1','0'],
 
 	['139','Status',	'cell2_16',	'Droger','1','0'],
-	['140','Data',		'cell2_17',	'Verbruik droger','1','0'],
+	['0','Data',		'cell2_17',	'0','0','0'],
 	['0','Data',		'cell2_18',	'Zonnescherm (achter)','1','0'],
-	['141','Status',	'cell2_19',	'IJskast','1','0'],
-	['142','Data',		'cell2_20',	'Verbruik IJskast','1','0'],
+	['0','Data',		'cell2_17',	'0','0','0'],
+	['141','Status',	'cell2_20',	'IJskast','1','0'],
 
-	['145','Data',		'cell2_21',	'Bewegingssensor F','1','4'],
+	['140','Data',		'cell2_21',	'Verbruik droger','1','0'],
 	['0','Tijd',		'cell2_22',	'Tijd','0','0'],
-	['147','Data',		'cell2_23',	'Lux Fibaro','1','0'],
+	['142','Data',		'cell2_23',	'Verbruik IJskast','1','0'],
 	['73','ForecastStr','cell2_25',	'Weersvoorspelling (FC)','0','0'],
 	];
 	$.PageArray_Scenes = [
