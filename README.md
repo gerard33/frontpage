@@ -30,9 +30,9 @@ It will take some time and a lot of trial and error but it is definitely worth i
 
 2) Check the idx of this switch
 
-3) In the On command of the switch place: http://yourip/folder/frontpage/sonos/index.php?zone=IDX&action=Play
+3) In the On command of the switch place: http://yourip/folder/frontpage/sonos/index.php?zone=IDX&action=Play (change IDX with the idx of your Sonos in Domoticz)
 
-4) In the Off command of the switch place: http://yourip/folder/frontpage/sonos/index.php?zone=IDX&action=Stop
+4) In the Off command of the switch place: http://yourip/folder/frontpage/sonos/index.php?zone=IDX&action=Stop (change IDX with the idx of your Sonos in Domoticz)
 
 5) Edit config.php in sonos folder, fill in the idx and the ip address
 
