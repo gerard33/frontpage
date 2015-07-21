@@ -32,6 +32,35 @@ function VolumeSonos(idx) {
 function RefreshData()
 {
 	clearInterval($.refreshTimer);
+	
+	//Get sunrise/sunset
+	var timeurl=$.domoticzurl+"/json.htm?type=command&param=getSunRiseSet";
+	$.getJSON(timeurl,
+	{
+		format: "json"
+	},
+	function(data) {
+	if (typeof data != 'undefined') {
+		$.each(data, function(i,item){
+			if ( i == 'Sunrise' ) {
+				//console.log("Sunrise: ", item);
+				var_sunrise = item;
+				//remove seconds from time
+				var_sunrise = var_sunrise.substring(0, var_sunrise.length - 3);
+			}
+			else if ( i == 'Sunset' ) {
+				//console.log("Sunset: ", item);
+				var_sunset = item;
+				//remove seconds from time
+				var_sunset = var_sunset.substring(0, var_sunset.length - 3);
+			}
+		});
+	}
+	else {
+    //console.log('Undefined');
+	}	
+	});
+		
 	var jurl=$.domoticzurl+"/json.htm?type=devices&plan="+$.roomplan+"&jsoncallback=?";
 	$.getJSON(jurl,
 	{
@@ -148,18 +177,36 @@ function RefreshData()
 	//alarmcss=';background-image:url(\'../icons/' + vdata + 'dimmer.png\');background-repeat:no-repeat;background-position:50%25%;color:#08c5e3;font-size:0%;vertical-align:top;';
 
 	//Dimmer
-	if(vplusmin > 0 && vplusmin !=2 && vplusmin !=4) {
-		if (vdata == txt_off) {
-			var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\')"; style='+alarmcss+'>'+ vdata+'</span>';
-			//var plus = "<img src=icons/up_off.png align=right vspace=12 onclick=ChangeStatus('plus',txt_off," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
-			//var min = "<img src=icons/down_off.png align=left vspace=12 onclick=ChangeStatus('min',txt_off," + item.idx + ","+ vdimmercurrent+")>" //allign=left
-			var plus = ""; //no buttons when switch is off
-			var min = ""; //no buttons when switch is off
-		}
-		else if(vplusmin !=2 && vplusmin !=4) {
-			var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\')"; style='+alarmcss+'>'+ vdata+'</span>';
-			var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeStatus('plus'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
-			var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeStatus('min'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>" //align=left
+	if(vtype == 'Level' && item.SwitchType == 'Dimmer') {
+		if(vplusmin > 0 && vplusmin !=2 && vplusmin !=4) {
+			if (vdata == txt_off) {
+				if(vplusmin == 1) { //Normal dimmer
+					var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
+				} 
+				if(vplusmin == 5) { //Set ZWave dimmer on certain value from frontpage_settings
+					var hlp = '<span onclick="SwitchDimmer('+item.idx+', '+z_dimmer+');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
+					//var hlp = '<span onclick="BlindChangeStatus(\'plus\', '+ z_dimmer +', '+ item.idx +');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
+					//End ZWave dimmer
+				}
+				//var plus = "<img src=icons/up_off.png align=right vspace=12 onclick=ChangeStatus('plus',txt_off," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
+				//var min = "<img src=icons/down_off.png align=left vspace=12 onclick=ChangeStatus('min',txt_off," + item.idx + ","+ vdimmercurrent+")>" //allign=left
+				var plus = ""; //no buttons when switch is off
+				var min = ""; //no buttons when switch is off
+			}
+			else if(vplusmin !=2 && vplusmin !=4) {
+				if (item.MaxDimLevel == 100) {
+						// For ZWave dimmer
+						vdata=new String(vdata).replace( vdata, z_dimmer);
+						var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+						var plus = "<img src=icons/up.png align=right vspace=12 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+						var min = "<img src=icons/down.png align=left vspace=12 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+						//console.log(vdata);
+					} else {
+						var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+						var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeStatus('plus'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
+						var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeStatus('min'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>" //align=left
+					}
+			}
 		}
 		vdata = min.concat(hlp,plus);
 		//console.log(vdata);
@@ -557,13 +604,15 @@ function RefreshData()
 	// Replace ON and OFF for the virtual switch 'IsDonker' by images
 	if(item.idx == idx_SunState && vdata == 'Off'){
 		vdata=new String(vdata).replace( "Off","<img src=icons/sunrise.png vspace=8>");		// day
-	//	vdesc=new String(vdesc).replace( "Zon onder","Zon op");					// replace text in desc
-		vdesc=desc_sunrise;
+		//vdesc=new String(vdesc).replace( "Zon onder","Zon op");					// replace text in desc
+		//vdesc=desc_sunrise; //show text
+		vdesc=desc_showsunboth; //show time sunrise and sunset
 	}
 	if(item.idx == idx_SunState && vdata == 'On'){
 		vdata=new String(vdata).replace( "On","<img src=icons/sunset.png vspace=8>");		// night
-	//	vdesc=new String(vdesc).replace( "Zon op","Zon onder");					// replace text in desc
-		vdesc=desc_sunset;
+		//vdesc=new String(vdesc).replace( "Zon op","Zon onder");					// replace text in desc
+		//vdesc=desc_sunset; //show text
+		vdesc=desc_showsunboth; //show time sunrise and sunset
 	}
 
 
@@ -692,6 +741,33 @@ function RefreshData()
 		$('#desc_'+vlabel).html(vdesc);
 			
 	}
+	//Start SunRise and Sunset
+	else if ( $.PageArray[ii][1] === 'SunRise' ) { 			//Special nummer, zonsop/onder in cell (test)
+        var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+		var vdesc=      '';
+		var vattr=      $.PageArray[ii][6];             	// extra css attributes
+		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		$('#'+vlabel).html( '<div style='+vattr+'>'+var_sunrise+'</div>');
+		$('#desc_'+vlabel).html(txt_sunrise);
+	}	
+	else if ( $.PageArray[ii][1] === 'SunSet' ) { 			//Special nummer, zonsop/onder in cell (test)
+		var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+		var vdesc=      '';
+		var vattr=      $.PageArray[ii][6];             	// extra css attributes
+		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		$('#'+vlabel).html( '<div style='+vattr+'>'+var_sunset+'</div>');
+		$('#desc_'+vlabel).html(txt_sunset);
+	}	
+	else if ( $.PageArray[ii][1] === 'SunBoth' ) { 			//Special nummer, zonsop/onder in cell (test)
+		var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+		var vdesc=      '';
+		var vattr=      $.PageArray[ii][6];             	// extra css attributes
+		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		$('#'+vlabel).html( '<div style='+vattr+'>&#9650 ' +var_sunrise+' | &#9660 '+var_sunset+'</div>');
+		$('#desc_'+vlabel).html(txt_sunboth);
+		desc_showsunboth = '&#9650; ' +var_sunrise+' | &#9660; '+var_sunset; // used for cell with time sunrise and sunset including arrow up and arrow down
+	}
+	//End SunRise and SunSet
 	}
 	});
 	}
@@ -840,6 +916,23 @@ function SwitchToggle(idx, switchcmd)
 	});
 	RefreshData();
 	}
+	
+//switch dimmer and set level
+function SwitchDimmer(idx, level)
+	{
+	$.ajax({
+	url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=Set%20Level" + "&level=" + level,
+	async: false,
+	dataType: 'json',
+	success: function(){
+	console.log('SUCCES');
+	},
+	error: function(){
+	console.log('ERROR');
+	}
+	});
+	RefreshData();
+	}
 
 //Dimmer, only works with 1-16 dimmer for now
 function ChangeStatus(OpenDicht,level,idx,currentlevel)
@@ -911,9 +1004,10 @@ function BlindChangeStatus(OpenDicht,level,idx)
 
         if (OpenDicht == "plus")
           {
-                var d = level + 10;
+                //var d = 0;
+				var d = level + 10;
                 if(d > 100) {
-                        d = 100;
+					d = 100;
                 }
                 $.ajax({
                         url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
@@ -921,6 +1015,9 @@ function BlindChangeStatus(OpenDicht,level,idx)
                         dataType: 'json',
                         success: function(){
                                 console.log('SUCCES');
+								//console.log('level oud: ' + level);
+								//console.log('level nieuw: ' + d);
+								z_dimmer = d; //To show new value for ZWave dimmer
                         },
                         error: function(){
                                 console.log('ERROR');
@@ -930,25 +1027,38 @@ function BlindChangeStatus(OpenDicht,level,idx)
           else
           {
                 
-					var d = level - 10;
-                //console.log("in min",d,level);
-                if( d < 0 ){
-                        d = 0;
-                }
+				//var d = 0;
+				var d = level - 10;
+				//console.log("in min",d,level);
+				if( d < 0 ){
+					d = 0;
+				}
                 $.ajax({
                         url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
                         async: false,
                         dataType: 'json',
                         success: function(){
                                 console.log('SUCCES');
+								//console.log('level oud: ' + level);
+								//console.log('level nieuw: ' + d);
+								z_dimmer = d; //To show new value for ZWave dimmer
                         },
                         error: function(){
                                 console.log('ERROR');
                         }
                 });
           }
-        
+//sleep(3000);        
 RefreshData();
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
 
 //Thermostat

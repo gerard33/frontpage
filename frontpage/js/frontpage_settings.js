@@ -3,8 +3,8 @@
 <!-- var txt_off = '<img src=icons/off.png>'; -->
 var txt_on = 'Aan';
 var txt_off = 'Uit';
-var txt_zonon = 'Dicht';
-var txt_zonoff = 'Open';
+var txt_zonon = 'Uit'; <!-- Dicht -->
+var txt_zonoff = 'In'; <!-- Open -->
 var txt_zonstopped = 'Gestopt';
 var txt_zonstop = '| |';
 <!-- var txt_dim_plus = ' + '; -->
@@ -23,6 +23,9 @@ var switch_protected_timeout = '1500';
 var switch_on_timeout = '1500';
 var switch_off_timeout = '1500';
 var camera_doorbell_timeout = '15400';
+
+<!-- Value for ZWave dimmer when on-->
+var z_dimmer = '40';
 
 <!-- Set values so colors can change -->
 var temp_freeze = '0';
@@ -49,7 +52,7 @@ var idx_Alarm = '109';
 var idx_Rainmeter = '39';
 var idx_Temp1 = '18';
 var idx_Temp2 = '22';
-var idx_Temp_buiten = '77';
+var idx_Temp_buiten = '176';
 var idx_Tempf = '154';
 var idx_Iphone5s = '10';
 var idx_Voordeur = '153';
@@ -80,6 +83,12 @@ var desc_alarm_home = 'Alarm aan (thuis)';
 var desc_alarm_away = 'Alarm aan (weg)';
 var desc_sunrise = 'Zon op';
 var desc_sunset = 'Zon onder';
+var desc_showsunboth = ''; // used to show sunrise and sunset in vdesc
+var txt_sunboth='';
+var txt_sunset='Zon onder';
+var txt_sunrise='Zon op';
+var var_sunrise='';
+var var_sunset='';
 var desc_protected = '<img src=icons/lock-closed_w.png align=right style="margin:1.5px 3px 0px -10px">'; //shows lock picture if device is protected or when plusmin is 4
 
 <!-- This triggers the camera PopUp when the doorbell is pressed -->
@@ -106,7 +115,7 @@ $(document).ready(function() {
 	['18','Humidity',	'cell2b',	'Garage','0','0'],
 	['0','Data',		'cell3',	'Camera garage','0','0'],
 	['0','Desc',		'cell4',	'Buitentemp + vocht','0','0'],
-	['77','Data',		'cell4a',	'Buitentemp','1','0'],
+	['176','Data',		'cell4a',	'Buitentemp','1','0'],
 	['98','Humidity',	'cell4b',	'Buitenvocht','0','0'],
 	['0','Desc',		'cell5',	'Regen + regenkans','0','0'],
 	['39','Rain',		'cell5a',	'Regen','1','0'],
@@ -120,9 +129,9 @@ $(document).ready(function() {
 
 	['24','Level',		'cell11',	'Keuken','1','1'],
 	['25','Status',		'cell12',	'Keukenkastjes','1','0'],
-	['0','Status',		'cell13',	'Studeerkamer (25%)','1','0'],
-	['103','Status',	'cell14',	'Studeerkamer','1','0'],
-	['34','Status',		'cell15',	'Garage','1','0'],
+	['0','Status',		'cell13',	'Kantoor lamp (25%)','1','0'],
+	['171','Level',		'cell14',	'Kantoor','1','5'], //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
+	['177','Status',	'cell15',	'Tuin','1','0'],
 
 	['153','Status',	'cell16',	'Voordeur','1','4'],
 	['149','Status',	'cell17',	'Garagedeur','1','4'],
@@ -135,6 +144,8 @@ $(document).ready(function() {
 	['109','Data',		'cell23',	'Alarm','1','0'],
 	
 	['0','Temp',		'cell25',	'Temperatuur buiten (C)','0','0'],
+	
+	['0','SunBoth',		'cell26',	'Dummy cel voor bepaling zon op en zon onder','0','0'],
 
 
 	['37','Status',		'cell00',	'IsDonker','0','0'],
@@ -166,9 +177,9 @@ $(document).ready(function() {
 	['46','Status',		'cell2_15',	'Vijver luchtpomp','1','0'],
 
 	['139','Status',	'cell2_16',	'Droger','1','0'],
-	['0','Data',		'cell2_17',	'0','0','0'],
-	['0','Data',		'cell2_18',	'Zonnescherm (achter)','1','0'],
-	['0','Data',		'cell2_17',	'0','0','0'],
+	['34','Status',		'cell2_17',	'Garage','1','0'],
+	['0','Data',		'cell2_18',	'0','0','0'],
+	['0','Data',		'cell2_19',	'0','0','0'],
 	['141','Status',	'cell2_20',	'IJskast','1','0'],
 
 	['140','Data',		'cell2_21',	'Verbruik droger','1','0'],
