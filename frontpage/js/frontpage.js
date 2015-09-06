@@ -46,13 +46,13 @@ function RefreshData()
 				//console.log("Sunrise: ", item);
 				var_sunrise = item;
 				//remove seconds from time
-				var_sunrise = var_sunrise.substring(0, var_sunrise.length - 3);
+				//var_sunrise = var_sunrise.substring(0, var_sunrise.length - 3);
 			}
 			else if ( i == 'Sunset' ) {
 				//console.log("Sunset: ", item);
 				var_sunset = item;
 				//remove seconds from time
-				var_sunset = var_sunset.substring(0, var_sunset.length - 3);
+				//var_sunset = var_sunset.substring(0, var_sunset.length - 3);
 			}
 		});
 	}
