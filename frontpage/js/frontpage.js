@@ -45,14 +45,14 @@ function RefreshData()
 			if ( i == 'Sunrise' ) {
 				//console.log("Sunrise: ", item);
 				var_sunrise = item;
-				//remove seconds from time
-				//var_sunrise = var_sunrise.substring(0, var_sunrise.length - 3);
+				//remove seconds from time if these are shown, dependent on Domoticz version
+				var_sunrise = var_sunrise.substring(0, 5);
 			}
 			else if ( i == 'Sunset' ) {
 				//console.log("Sunset: ", item);
 				var_sunset = item;
-				//remove seconds from time
-				//var_sunset = var_sunset.substring(0, var_sunset.length - 3);
+				//remove seconds from time if these are shown, dependent on Domoticz version
+				var_sunset = var_sunset.substring(0, 5);
 			}
 		});
 	}
