@@ -3,8 +3,8 @@
 See http://www.domoticz.com/forum/viewtopic.php?f=8&t=4698.
 
 ## Screenshot
-![Alt text](/screenshot/frontpage-day.jpg "Frontpage day")
-![Alt text](/screenshot/frontpage-night.jpg "Frontpage night")
+![Alt text](/screenshot/frontpage-night.jpg "Frontpage night (page 1)")
+![Alt text](/screenshot/frontpage-day.jpg "Frontpage day (page 2)")
 
 ## Introduction
 
