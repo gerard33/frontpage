@@ -2,6 +2,10 @@
 
 See http://www.domoticz.com/forum/viewtopic.php?f=8&t=4698.
 
+## Screenshot
+![Alt text](/screenshot/frontpage-day.jpg "Frontpage day")
+![Alt text](/screenshot/frontpage-night.jpg "Frontpage night")
+
 ## Introduction
 
 Setting up the frontpage requires some time. Please take a good look at the forum topic mentioned above and the (high level) instructions below.
