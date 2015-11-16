@@ -134,12 +134,11 @@ class Sonos
 		$this->_out($this->_PHPSonos->GetMediaInfo());
 	}
 
-        
         protected function _actionGetPositionInfo()
 	{
                 $this->_out($this->_PHPSonos->GetPositionInfo());
         }
-                
+    
         protected function _actionGetTransportSettings()
 	{
                 $this->_out($this->_PHPSonos->GetTransportSettings());
@@ -147,7 +146,7 @@ class Sonos
         
         protected function _actionGetTransportInfo()
 	{
-                $this->_out($this->_PHPSonos->GetTransportInfo());
+                $this->_out($this->_PHPSonos->GetTransportInfo()); //1: PLAYING, 2: PAUSED, 3: STOPPED
         }
         
         protected function _actionGetVolume()
@@ -207,7 +206,7 @@ class Sonos
 	{
                 $playMode = $this->_assertPlayMode($_GET['playMode']);
                 $this->_PHPSonos->SetPlayMode($playMode);
-        }  
+        }
         
         protected function _actionPrevious()
 	{
@@ -243,8 +242,16 @@ class Sonos
                 
                 if($volume < 100)
                 {
-                        $volume += 2;
-                        $this->_PHPSonos->SetVolume($volume);
+                        if ($volume == 0 or $volume == 1) {
+							$volume += 1;
+							$this->_PHPSonos->SetVolume($volume);
+						} elseif ($volume % 2 == 0) { // volume is even
+							$volume += 2;
+							$this->_PHPSonos->SetVolume($volume);
+						} else { //volume is odd
+							$volume += 1;
+							$this->_PHPSonos->SetVolume($volume);
+						}
                 }     
         } 
         
@@ -254,15 +261,23 @@ class Sonos
                 
                 if($volume > 0)
                 {
-                        $volume -= 2;
-                        $this->_PHPSonos->SetVolume($volume);
+                        if ($volume == 2) {
+							$volume -= 1;
+							$this->_PHPSonos->SetVolume($volume);
+						} elseif ($volume % 2 == 0) { // volume is even
+							$volume -= 2;
+							$this->_PHPSonos->SetVolume($volume);
+						} else { //volume is odd
+							$volume -= 1;
+							$this->_PHPSonos->SetVolume($volume);
+						}
                 }     
         } 
         
         protected function _actionNextRadio()
         {
                 $radioStations = $this->_config['radiostations'];
-                $currentRadio = $this->_currentRadio();
+				$currentRadio = $this->_currentRadio();
 
                 foreach ($radioStations as $key => $value) 
                 {
@@ -288,15 +303,53 @@ class Sonos
                 $this->_saveCurrentRadio($nextRadio);
                 $this->_PHPSonos->SetRadio("x-rincon-mp3radio://$nextRadioUrl", $nextRadio);
                 $this->_PHPSonos->Play();
+				print_r($nextRadio);
         }
 
-		/*Added by tha ulti, to be updated */
+		protected function _actionPrevRadio()
+        {
+                $radioStationsP = array_reverse($this->_config['radiostations']);
+				$currentRadioP = $this->_currentRadio();
+                
+				foreach ($radioStationsP as $key => $value) 
+                {
+						if($key == $currentRadioP)
+                        {
+                                $nextRadioUrlP = current($radioStationsP);
+                                $nextRadioP    = key($radioStationsP);
+								
+                                //if last element catched, move to first element
+                                if(!$nextRadioUrlP)
+                                {
+                                        $nextRadioUrlP = reset($radioStationsP);
+                                        $nextRadioP    = key($radioStationsP);
+                                }
+                                break;
+                        }
+                        else
+                        {
+								next($radioStationsP);
+                        }
+                }
+                
+                $this->_saveCurrentRadio($nextRadioP);
+                $this->_PHPSonos->SetRadio("x-rincon-mp3radio://$nextRadioUrlP", $nextRadioP);
+                $this->_PHPSonos->Play();
+				print_r($nextRadioP);
+        }
+				
+		/*Added, to be updated */
 		protected function _action538()
         {
                 $this->_PHPSonos->SetRadio("x-rincon-mp3radio://vip-icecast.538.lw.triple-it.nl/RADIO538_MP3", "538");
                 $this->_PHPSonos->Play();
-        }  
-        /*Added by tha ulti, to be updated */
+        }
+		protected function _actionQmusicns()
+        {
+                $this->_PHPSonos->SetRadio("x-rincon-mp3radio://icecast-qmusic.cdp.triple-it.nl/Qmusic_nl_nonstop_96", "QMusic Nonstop");
+                $this->_PHPSonos->Play();
+        }
+        /*Added, to be updated */
 				
         /**
          * save current music status, play predefined message, restore previous status
@@ -334,31 +387,59 @@ class Sonos
 			$message  = urlencode($message); //TODO limit to match API < 100 characters and clean out non alphabetical charachters
 			$filename     = $message;
 			$file = $this->_config['messageStorePath'] . $filename;
-
+			$file_to_search = $this->_config['messageRelativePath'] . $filename. '.mp3'; //added this because otherwise the file isn't searched in the right way
+			//echo "$file_to_search";
+			//echo "<br>";
+			
 			// if message already exists, don't make a call too Google
-			if (!file_exists($file . '.mp3'))
+			//if (!file_exists($file . '.mp3')) //commented out, this is not the right way to search
+			if (!file_exists($file_to_search))
 			{
-			ini_set('user_agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36');
-			$audio = file_get_contents('http://translate.google.com/translate_tts?ie=UTF-8&q=' . $message . '&tl=' . $lang);
-			file_put_contents($file . '.mp3', $audio);
+				echo "<br>";
+				echo "<div style ='font:14px Arial,tahoma,sans-serif;color:black'>File doesn't exist, make a new file</div>";
+				ini_set('user_agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36');
+				/* Changed */
+				//$audio = file_get_contents('http://translate.google.com/translate_tts?ie=UTF-8&q=' . $message . '&tl=' . $lang);
+				//$audio = file_get_contents('http://translate.google.com/translate_tts?tl=' . $lang . '&q=' . $message . '&ie=UTF-8&total=1&idx=0&client=Mozilla');
+				//$audio = file_get_contents('http://translate.google.com/translate_tts?ie=UTF-8&q=' . $message . '&tl=' . $lang . '&client=t');
+				//curl 'http://translate.google.com/translate_tts?ie=UTF-8&q=Hello&tl=en&client=t' -H 'Referer: http://translate.google.com/' -H 'User-Agent: stagefright/1.2 (Linux;Android 5.0)' > google_tts.mp3
+				//Google TTS not working from PHP
+				//www.voicerss.org
+				$api_key = $this->_config['tssapikey'];
+				$audio = file_get_contents('https://api.voicerss.org/?key=' . $api_key . '&c=mp3&f=16khz_8bit_mono&hl=nl-nl&r=0&src=' .$message);
+				//echo "$audio";
+				/* End changed */
+				//file_put_contents($file . '.mp3', $audio);
+				file_put_contents($file_to_search, $audio);
 			}
 			// rewrite the TTS filename into messageId for play
 			$messageId = $filename;
 		}
                 
                 // save informations 
-                $saveVolume       = $this->_PHPSonos->GetVolume(); 
-                $savePositionInfo = $this->_PHPSonos->GetPositionInfo();
+                $saveVolume       = $this->_PHPSonos->GetVolume();
+				$savePositionInfo = $this->_PHPSonos->GetPositionInfo();
                 $saveMediaInfo    = $this->_PHPSonos->GetMediaInfo();
-                $radio            = (strpos($saveMediaInfo['CurrentURI'], "x-sonosapi-stream:")) !== false;
-
+				/* Changed */
+				//$savePositionInfo_print = $this->_outflat($this->_PHPSonos->GetPositionInfo()); //to show information in normal layout not in array
+                //$saveMediaInfo_print    = $this->_outflat($this->_PHPSonos->GetMediaInfo()); //to show information in normal layout not in array
+				/* End changed */
+				//echo "Volume: $saveVolume";
+				//echo "Postion info: $savePositionInfo";
+				//echo "Media info: $saveMediaInfo";
+				
+                //$radio            = (strpos($saveMediaInfo['CurrentURI'], "x-sonosapi-stream:")) !== false; //works only for Sonos app radio stations
+				$radio            = (strpos($saveMediaInfo['CurrentURI'], "x-")) !== false; //playlist in php starts with x-rincon-mp3radio
+												
                 $oldti = $this->_PHPSonos->GetTransportInfo();
 
                 // set AVT to message
                 $this->_PHPSonos->SetVolume($volume);
                 $this->_PHPSonos->SetAVTransportURI('x-file-cifs:' . $this->_config['messagePath'] . $messageId . '.mp3');
                 $this->_PHPSonos->Play();
-
+				echo "<br>";
+				echo "<div style ='font:14px Arial,tahoma,sans-serif;color:black'>Played: $message</div>";
+				
                 // wait until message is done
                 while ($this->_PHPSonos->GetTransportInfo() == '' || $this->_PHPSonos->GetTransportInfo() == 1) 
                 {
@@ -368,7 +449,7 @@ class Sonos
                 // set old queue 
                 if ($radio) 
                 {
-                        $this->_PHPSonos->SetRadio($saveMediaInfo['CurrentURI']);
+                        $this->_PHPSonos->SetRadio($saveMediaInfo['CurrentURI'], $saveMediaInfo['title']);
                 } 
                 else 
                 {
@@ -446,9 +527,22 @@ class Sonos
 	
 	protected function _out($data)
 	{
+		//commented out
+		//echo '<PRE>';
+		//print_r($data);
+		//echo '</PRE>';
+		//done this to give an array output which can be read in JSON
+		//commented out
+		$js_array = json_encode($data);
+		print_r($js_array);
+	}
+
+	protected function _outflat($data)
+	{
+		//give data in standard output so TTS will recognize the current playing
 		echo '<PRE>';
 		print_r($data);
-		echo '</PRE>';		
-	}      
+		echo '</PRE>';
+	}	
 }
 ?>
