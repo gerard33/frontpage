@@ -2,19 +2,27 @@
 
 $config = array(
 	'zones' => array(
-                '115'   => '192.168.1.161', /* Kantoor */
-				'116'   => '192.168.1.196', /* Keuken */
+                '115'   => '192.168.1.161', /* Office, number is IDX in Domoticz */
+		'116'   => '192.168.1.196', /* Kitchen, number is IDX in Domoticz */
 	),
 	'radiostations' => array(
-		'DasDing'  => 'swr-mp3-m-dasding.akacast.akamaistream.net/7/588/137139/v1/gnl.akacast.akamaistream.net/swr-mp3-m-dasding',
-        '1Live'    => '1live-diggi.akacast.akamaistream.net/7/965/119435/v1/gnl.akacast.akamaistream.net/1live-diggi',
-		'538'      => 'vip-icecast.538.lw.triple-it.nl/RADIO538_MP3',
+		'Radio 538'      	=> 'vip-icecast.538.lw.triple-it.nl/RADIO538_MP3',
+		'QMusic'		=> 'icecast-qmusic.cdp.triple-it.nl/Qmusic_nl_live_96.mp3',
+		'QMusic Non Stop'	=> 'icecast-qmusic.cdp.triple-it.nl/Qmusic_nl_nonstop_96.mp3',
+		'QMusic Foute Uur'	=> 'icecast-qmusic.cdp.triple-it.nl/Qmusic_nl_fouteuur_96.mp3',
+		'3FM'			=> 'icecast.omroep.nl/3fm-bb-aac',
+		'Freeze FM'		=> '178.19.127.9:80',
+		'Radio 1'		=> 'icecast.omroep.nl/radio1-bb-aac',
+		'Skyradio'		=> '8563.live.streamtheworld.com:80/SKYRADIOAAC_SC?TGT=TuneIn&DIST=TuneIn',
+		'Zappelin'		=> 'icecast.omroep.nl/zappelinradio-bb-aac',
 	),
-        'messagePath'   	=> 'spraak/',
-        'messageStorePath'   => 'spraak/',
-        'messageLang'   	=> 'nl',
-        'currentRadio'  	=> 'currentRadio.txt',
-        'filePhpSonos'  	=> 'PHPSonos.inc.php',
-        'logging'       	=> false,
-        'logfile'       	=> 'log.txt',
+        'messagePath'   		=> '//NAS_GZ/web/domoticz/fp/sonos/spraak/',
+        'messageStorePath'   		=> '//NAS_GZ/web/domoticz/fp/sonos/spraak/',
+	'messageRelativePath'		=> './spraak/',
+        'messageLang'   		=> 'nl',
+        'currentRadio'  		=> 'currentRadio.txt',
+        'filePhpSonos'  		=> 'PHPSonos.inc.php',
+        'logging'       		=> false,
+        'logfile'       		=> 'log.txt',
+	'tssapikey'			=> '<apikey_from_voicerrs.org>',
 );
