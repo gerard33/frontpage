@@ -4,7 +4,7 @@ function lightbox_open(id, timeout, txt)
 	{
 	window.scrollTo(0,0);
 	if (typeof txt != 'undefined') {
-	$('#popup_'+id).html('<div>'+txt+'</div>'); }
+		$('#popup_'+id).html('<div>'+txt+'</div>'); }
 	$('#popup_'+id).fadeIn('fast');
 	$('#fade').fadeIn('fast');
 	return setTimeout(function() {
@@ -28,6 +28,26 @@ function VolumeSonos(idx) {
     }).responseText
 }
 
+<!-- Check whats playing on Sonos - Radio -->
+function MediaInfoSonos(idx) {
+	return $.ajax({
+    url: "sonos/index.php?zone=" + idx + "&action=GetMediaInfo",
+	type: 'get',
+    dataType: 'html',
+    async: false
+    }).responseText
+}
+
+<!-- Check whats playing on Sonos - Albums -->
+function PositionInfoSonos(idx) {
+	return $.ajax({
+    url: "sonos/index.php?zone=" + idx + "&action=GetPositionInfo",
+	type: 'get',
+    dataType: 'html',
+    async: false
+    }).responseText
+}
+
 <!-- Main Frontpage fuction -->
 function RefreshData()
 {
@@ -45,13 +65,13 @@ function RefreshData()
 			if ( i == 'Sunrise' ) {
 				//console.log("Sunrise: ", item);
 				var_sunrise = item;
-				//remove seconds from time if these are shown, dependent on Domoticz version
+				//remove seconds from time
 				var_sunrise = var_sunrise.substring(0, 5);
 			}
 			else if ( i == 'Sunset' ) {
 				//console.log("Sunset: ", item);
 				var_sunset = item;
-				//remove seconds from time if these are shown, dependent on Domoticz version
+				//remove seconds from time
 				var_sunset = var_sunset.substring(0, 5);
 			}
 		});
@@ -94,8 +114,11 @@ function RefreshData()
 	    (+dateArray[5]),
 	    (+dateArray[6])
 	);
-	var convStringDate = dateObject.toString ( 'd MMM' );	// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
-	var convStringTime = dateObject.toString ( 'HH:mm' );	// the part of the 'Last Seen' that creates the TIME
+	var convStringDate = dateObject.toString ( 'd MMM' );		// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
+	var convStringDate = convStringDate.replace('Mar', 'Mrt'); 	// replace some months to NL abbrev
+	var convStringDate = convStringDate.replace('May', 'Mei'); 	// replace some months to NL abbrev
+	var convStringDate = convStringDate.replace('Oct', 'Okt'); 	// replace some months to NL abbrev
+	var convStringTime = dateObject.toString ( 'HH:mm' );		// the part of the 'Last Seen' that creates the TIME
 	
 	//Added by GZ used for last seen to only show day if <> today
 	var thisday = new Date();
@@ -111,7 +134,8 @@ function RefreshData()
 	var thisday = yyyy+"-"+mm+"-"+dd;
 	//End
 
-	var vdimmercurrent=  item["LevelInt"];	// What is the dim level
+	var vdimmercurrent = item["LevelInt"];	// What is the dim level int
+	var vdimmervalue = item["Level"];		// What is the dim level
 	if (typeof vdata == 'undefined') {
 		vdata="?!";
 		vdata=item.idx;
@@ -161,14 +185,17 @@ function RefreshData()
 	}
 
 
-	// dimmer layout cell
-	if (vplusmin > 0) {	// dimmer layout cell, percentage font-size was 80%
+	//switch layout cell
+	if (vplusmin > 0) {	//layout cell, percentage font-size was 80%
 		if (vstatus == 'Off') {
-			alarmcss=';color:#E24E2A;font-size:100%;vertical-align:top;';	// text color dimmer percentage when OFF
-			vdata = txt_off;
+			//alarmcss=';color:#E24E2A;font-size:100%;vertical-align:top;';	// text color dimmer percentage when OFF
+			alarmcss = color_off;
+			vdata = txt_off; //show text from frontpage_settings
 		}
 		else {
-			alarmcss=';color:#1B9772;font-size:100%;vertical-align:top;';	// text color dimmer percentage when ON
+			//alarmcss=';color:#1B9772;font-size:100%;vertical-align:top;';	// text color dimmer percentage when ON
+			alarmcss = color_on;
+			vdata = txt_on;	//show text from frontpage_settings
 		}
 	}
 
@@ -184,8 +211,9 @@ function RefreshData()
 					var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
 				} 
 				if(vplusmin == 5) { //Set ZWave dimmer on certain value from frontpage_settings
+					z_dimmer = '40';
 					var hlp = '<span onclick="SwitchDimmer('+item.idx+', '+z_dimmer+');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
-					//var hlp = '<span onclick="BlindChangeStatus(\'plus\', '+ z_dimmer +', '+ item.idx +');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
+					//var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
 					//End ZWave dimmer
 				}
 				//var plus = "<img src=icons/up_off.png align=right vspace=12 onclick=ChangeStatus('plus',txt_off," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
@@ -195,13 +223,36 @@ function RefreshData()
 			}
 			else if(vplusmin !=2 && vplusmin !=4) {
 				if (item.MaxDimLevel == 100) {
-						// For ZWave dimmer
-						vdata=new String(vdata).replace( vdata, z_dimmer);
-						var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
-						var plus = "<img src=icons/up.png align=right vspace=12 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-						var min = "<img src=icons/down.png align=left vspace=12 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-						//console.log(vdata);
+						//For ZWave dimmer
+						if(vplusmin == 5 && item.idx == idx_zdimmer) { //compare idx_zdimmer with z_whichdimmer if there are more zdimmers
+							//vdata = z_dimmer;
+							vdimmervalue = Math.round(vdimmervalue / 10)*10; //round to ten
+							if(z_dimmer == '') {		//when starting the frontpage
+								vdata = vdimmervalue;	//show current dim value
+							} else if (z_dimmer != vdimmervalue) {						//when dimmer is changed
+									vdata = z_dimmer;
+									z_dimmer = vdimmervalue;
+							} else {
+								vdata = z_dimmer;
+							}
+							var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+							var plus = "<img src=icons/up.png align=right vspace=12 onclick=ZWaveDim('plus'," + vdata + "," + item.idx + ")>";
+							var min = "<img src=icons/down.png align=left vspace=12 onclick=ZWaveDim('min'," + vdata + "," + item.idx + ")>";
+							//console.log(vdata + " | " + item.idx);
+						}
+						else {
+							//vdata = o_dimmer;
+							vdimmervalue = Math.round(vdimmervalue / 10)*10; //round to ten
+							vdata = vdimmervalue; //show current dim value
+							var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+							var plus = "<img src=icons/up.png align=right vspace=12 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+							var min = "<img src=icons/down.png align=left vspace=12 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+							//console.log(vdata + " | " + item.idx);
+						}
 					} else {
+						//vdata2 = vdimmervalue; //used for ChangeStatus
+						//vdimmervalue = Math.round(vdimmervalue / 5)*5; //round to ten
+						vdata = vdimmervalue; //show current dim value
 						var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
 						var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeStatus('plus'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
 						var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeStatus('min'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>" //align=left
@@ -215,25 +266,66 @@ function RefreshData()
 	//Volume Sonos
 	if(vplusmin == 2) {
 		if (vdata == txt_off) {
-			var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\')"; style='+alarmcss+'>'+ vdata+'</span>';
+			//var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\')"; style='+alarmcss+'>'+ vdata+'</span>';
+			var hlp = '<span onclick="SwitchToggle('+item.idx+',\'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
 			var plus = ""; //no volume up when Sonos is off
 			var min = ""; //no volume down when Sonos is off
 		}
 		else { //if(vplusmin == 2) {
 			vdata = txt_on // added to get the right on txt
-			var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\')"; style='+alarmcss+'>'+ vdata+'</span>';
-			var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeVolumeUp(" + item.idx + ")>"; //volume up when Sonos is on
-			var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeVolumeDown(" + item.idx + ")>" //volume down when Sonos is on
-			if(show_sonos_volume == true) {			//get volume of sonos to show in desc text when frontpage_setting is set true
+			//var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\')"; style='+alarmcss+'>'+ vdata+'</span>';
+			var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+			var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeVolumeUp(" + item.idx + ")>";		//volume up when Sonos is on
+			var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeVolumeDown(" + item.idx + ")>"	//volume down when Sonos is on
+			if(show_sonos_volume == true) { //get volume of sonos to show in desc text when frontpage_setting is set true
 				//function to change value, because <PRE></PRE> are added from Sonos index.php page
 				function myTrim(x) {
-					//return x.replace(/^\s+|\s+$/gm,''); //trim spaces
+					//return x.replace(/^\s+|\s+$/gm,'');			//trim spaces
 					var trimpart = /<PRE>|<\/PRE>/g;
 					return x.replace(trimpart,'');
 				}
-				var vs1 = myTrim(VolumeSonos(item.idx));
-				//console.log(vs1);
-				vdesc = vdesc + " | " + vs1; 	//show volume in desc text when Sonos is on
+				var vs1 = myTrim(VolumeSonos(item.idx));			//show volume
+				var vs2 = myTrim(MediaInfoSonos(item.idx));			//show what's playing - radio
+				var vs3 = myTrim(PositionInfoSonos(item.idx));		//show what's playing - albums
+				var vs2 = JSON.parse(vs2);							//show what's playing to array
+				var vs3 = JSON.parse(vs3);							//show what's playing to array
+				//if music from other source is played
+				if (vs2.title ==  undefined || vs2.title == "") {
+					//vs3.album = vs3.album.substring(0, 22);		//show only first characters to fit screen
+					if (vs3.album == "") {
+						vs3.album = "Onbekend";
+					}
+					if (vs3.title == "") {
+						vs3.title = "Onbekend";
+					}
+					vs2.title = vs3.artist + " |  " + vs3.album;		//show album name and track
+					vs2.title = vs2.title.substring(0, 26);				//show only first characters to fit screen
+					vs3.streamContent = "#" + vs3.albumTrackNumber + ": " + vs3.title;	//show number and song
+					vs3.streamContent = vs3.streamContent.substring(0, 34);				//show only first characters to fit screen
+					//show left right buttons to zap in songs
+					var previous = '<span style="font-size: 20px; width: 15px; z-index: 1000; float: left" onclick="ChangePreviousSong('+item.idx+');"><a href="#">&lt;</a></span>';
+					var next = '<span style="font-size: 20px; width: 15px; z-index: 1000; float: right" onclick="ChangeNextSong('+item.idx+');"><a href="#">&gt;</a></span>';
+					var info = previous + vs2.title + next;
+					info = info + "<br/>" + '<span style="font-size: 80%; font-style: italic; display: block; line-height: 90%">' + vs3.streamContent + '</span>'; //margin-top: -3px
+					$('#ls_'+vlabel).html(info);						//show song in label
+				//if radio is played
+				} else {
+					vs2.title = vs2.title.substring(0, 26);				//show only first characters to fit screen
+					if( vs3.streamContent.indexOf('ZPSTR') >= 0){		//data is being loaded, show nothing
+						vs3.streamContent = '';
+					}
+					vs3.streamContent = vs3.streamContent.substring(0, 34);	//show only first characters to fit screen
+					//var info = vs2.title + "<br/>" + vs3.streamContent;
+					//show left right buttons to zap radio channels
+					var previous = '<span style="font-size: 20px; width: 15px; z-index: 1000; float: left" onclick="ChangeRadioPrev('+item.idx+');"><a href="#">&lt;</a></span>';
+					var next = '<span style="font-size: 20px; width: 15px; z-index: 1000; float: right" onclick="ChangeRadio('+item.idx+');"><a href="#">&gt;</a></span>';
+					var info = previous + vs2.title + next;
+					info = info + "<br/>" + '<span style="font-size: 80%; font-style: italic; display: block; line-height: 90%">' + vs3.streamContent + '</span>'; //margin-top: -3px
+					$('#ls_'+vlabel).html(info);						//show radio in label
+					//$('#ls_'+vlabel).html(vs2.title);					//show radio in label
+					//$('#ls_'+vlabel).html(vs3.streamContent);			//show what's playing in label
+				}
+				vdesc = vdesc + " | " + vs1;						//show volume in desc text when Sonos is on
 			}
 		}
 	vdata = min.concat(hlp,plus);
@@ -434,29 +526,42 @@ function RefreshData()
 		vdesc="IJzel";
 	}
 
-	// replace text when phone is at home
-	if (item.idx == idx_Iphone5s & vdata == 'On'){
-		vdata=new String(vdata).replace( "On", "Thuis");
+	//doorbell
+	if (item.idx == idx_doorbell && vdata == doorbell_status) {
+		lightbox_open('camera1', 15400);
+		vdata=new String(vdata).replace( "On", "Tringgg");
+		//vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
 	}
-	if (item.idx == idx_Iphone5s & vdata == 'Off'){
-		vdata=new String(vdata).replace( "Off", "Weg");
+	
+	// replace text when phone is at home
+	if (item.idx == idx_Iphone5s && vdata == txt_on){
+		vdata=new String(vdata).replace( txt_on, "Thuis");
+	}
+	if (item.idx == idx_Iphone5s && vdata == txt_off){
+		vdata=new String(vdata).replace( txt_off, "Weg");
+	}
+	if (item.idx == idx_Telefoon_m && vdata == txt_on){
+		vdata=new String(vdata).replace( txt_on, "Thuis");
+	}
+	if (item.idx == idx_Telefoon_m && vdata == txt_off){
+		vdata=new String(vdata).replace( txt_off, "Weg");
 	}
 	
 	// replace closed / open to dutch
-	if (item.idx == idx_Voordeur && vdata == 'Closed' ){
-		vdata=new String(vdata).replace( "Closed", "Dicht");
+	if (item.idx == idx_Voordeur && vstatus == "Closed"){
+		vdata = "Dicht";
 	}
-	if (item.idx == idx_Voordeur && vdata == 'Open'){
-		vdata=new String(vdata).replace( "Open", "Open");
+	if (item.idx == idx_Voordeur && vstatus == "Open"){
+		vdata = "Open";
 		alarmcss=color_off;
 	}
 	
 	// replace closed / open to dutch
-		if (item.idx == idx_Garagedeur && vdata == 'Closed' ){
-		vdata=new String(vdata).replace( "Closed", "Dicht");
+	if (item.idx == idx_Garagedeur && vstatus == "Closed"){
+		vdata = "Dicht";
 	}
-	if (item.idx == idx_Garagedeur && vdata == 'Open'){
-		vdata=new String(vdata).replace( "Open", "Open");
+	if (item.idx == idx_Garagedeur && vstatus == "Open"){
+		vdata = "Open";
 		alarmcss=color_off;
 	}
 	
@@ -558,6 +663,9 @@ function RefreshData()
 	//if(item.idx == '125' && vdata > -100){			// Adds the Celsius sign after the temperature (CPU)
 	//	vdata=new String(vdata).replace( vdata,vdata + "&#176;");
 	//}
+	if(item.idx == idx_Temp3){
+		vdata=new String(vdata).replace( " C","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>");
+	}
 	if(item.idx == idx_Temp_buiten){
 		vdata=new String(vdata).replace( " C","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>");
 	}
@@ -599,8 +707,14 @@ function RefreshData()
 		vdata=new String(vdata).replace( " Watt","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> W</sup>");
 	}
 	
+	// Add kWh to usage
+	if(item.idx == idx_UsageTot1){
+		vdata=new String(vdata).replace( " ","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>");
+	}
+	if(item.idx == idx_UsageTot2){
+		vdata=new String(vdata).replace( " ","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>");
+	}
 	
-		
 	// Replace ON and OFF for the virtual switch 'IsDonker' by images
 	if(item.idx == idx_SunState && vdata == 'Off'){
 		vdata=new String(vdata).replace( "Off","<img src=icons/sunrise.png vspace=8>");		// day
@@ -624,11 +738,11 @@ function RefreshData()
 	// set the text to ON instead of displaying the value for idx 107: the Fibaro Wall Plug
 	if(item.idx == idx_FibaroWP && vdata > 40){
 		vdata='<img src=icons/pump_on.png>';
-		alarmcss=';color:#1B9772;';
+		alarmcss= color_on;
 	}
 	if(item.idx == idx_FibaroWP && vdata < 40 && vdata > 0.9){
 		vdata='<img src=icons/pump_off.png>';
-		alarmcss=';color:#E24E2A;';
+		alarmcss= color_off;
 	}
 
 	// create switchable value when item is switch
@@ -636,12 +750,12 @@ function RefreshData()
 	
 	if (vdata == 'Off' && vplusmin !=4) {
 		switchclick = 'onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"';
-		alarmcss=';color:#E24E2A;';
+		alarmcss= color_off;
 		vdata = txt_off;
 	}
 	if (vdata == 'On' && vplusmin !=4) {
 		switchclick = 'onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"';
-		alarmcss=';color:#1B9772;';
+		alarmcss= color_on;
 		vdata = txt_on;
 	}
 	
@@ -685,11 +799,22 @@ function RefreshData()
 		}
 	}
 
-	// if extra css attributes. Make switch not switchable when it is protected, just give message.
+	if (vdata == txt_off && vplusmin ==6) { //protect switch when on for vplusmin is 6
+		switchclick = 'onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"';
+		alarmcss= color_off;
+		//vdata = txt_off;
+	}
+	if (vdata == txt_on && vplusmin ==6) { //protect switch when on for vplusmin is 6
+		switchclick = 'onclick="lightbox_open(\'protected\', '+switch_protected_timeout+', '+txt_switch_protected+')"';
+		vdesc = vdesc + desc_protected;
+		//alarmcss= color_on;
+		//vdata = txt_on;
+	}
+	
+	// if extra css attributes. Make switch not switchable when it is protected, just give message
 	if (typeof vattr == 'undefined') {
 		if (item.Protected == true || vplusmin == 4) {
 			vdesc = vdesc + desc_protected;
-			//vdesc=new String(vdesc).replace( "Zon onder","<img scr=icons/sunset.png style='position: relative;' width=10 height=15 z-index=1000>");
 			$('#'+vlabel).html('<div onClick="lightbox_open(\'protected\', '+switch_protected_timeout+', '+txt_switch_protected+');" style='+alarmcss+'>'+vdata+'</div>');
 		}
 		else { 
@@ -702,7 +827,7 @@ function RefreshData()
 	    $('#'+vlabel).html( '<div onClick="lightbox_open(\'protected\', '+switch_protected_timeout+ ', '+txt_switch_protected+');" style='+vattr+alarmcss+'>'+vdata+'</div>');
 		}
 		else {
-	    $('#'+vlabel).html( '<div '+switchclick+' style='+vattr+alarmcss+'>'+vdata+'</div>');
+			$('#'+vlabel).html( '<div '+switchclick+' style='+vattr+alarmcss+'>'+vdata+'</div>');
 		}
 		//einde nieuw						
 		$('#desc_'+vlabel).html(vdesc);
@@ -732,37 +857,37 @@ function RefreshData()
 		$('#desc_'+vlabel).html(vdesc);
 	}
 	
-	else if ( $.PageArray[ii][1] === 'Desc' ) { 	// shows vdesc when using splitted cells with divs
-		var vlabel=     $.PageArray[ii][2];         	// cell number from HTML layout
+	else if ( $.PageArray[ii][1] === 'Desc' ) { // shows vdesc when using splitted cells with divs
+		var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
 		var vdesc=      $.PageArray[ii][3];		// show text in bottom
 		var lastseen=	$.PageArray[ii][4];		// show last seen
-		var vls= 	item["LastUpdate"];		// Last Seen
+		var vls= 	item["LastUpdate"];			// Last Seen
 		//$('#'+vlabel).html( '<div style='+vattr+'>'+vdata+'</div>');
 		$('#desc_'+vlabel).html(vdesc);
 			
 	}
 	//Start SunRise and Sunset
-	else if ( $.PageArray[ii][1] === 'SunRise' ) { 			//Special nummer, zonsop/onder in cell (test)
-        var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+	else if ( $.PageArray[ii][1] === 'SunRise' ) { 	//Special nummer, zonsop/onder in cell (test)
+        var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
 		var vdesc=      '';
-		var vattr=      $.PageArray[ii][6];             	// extra css attributes
-		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		var vattr=      $.PageArray[ii][6];        	// extra css attributes
+		var valarm=     $.PageArray[ii][7];        	// alarm value to turn text to red
 		$('#'+vlabel).html( '<div style='+vattr+'>'+var_sunrise+'</div>');
 		$('#desc_'+vlabel).html(txt_sunrise);
 	}	
-	else if ( $.PageArray[ii][1] === 'SunSet' ) { 			//Special nummer, zonsop/onder in cell (test)
-		var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+	else if ( $.PageArray[ii][1] === 'SunSet' ) { 	//Special nummer, zonsop/onder in cell (test)
+		var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
 		var vdesc=      '';
-		var vattr=      $.PageArray[ii][6];             	// extra css attributes
-		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		var vattr=      $.PageArray[ii][6];         // extra css attributes
+		var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
 		$('#'+vlabel).html( '<div style='+vattr+'>'+var_sunset+'</div>');
 		$('#desc_'+vlabel).html(txt_sunset);
 	}	
-	else if ( $.PageArray[ii][1] === 'SunBoth' ) { 			//Special nummer, zonsop/onder in cell (test)
-		var vlabel=     $.PageArray[ii][2];             	// cell number from HTML layout
+	else if ( $.PageArray[ii][1] === 'SunBoth' ) { 	//Special nummer, zonsop/onder in cell (test)
+		var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
 		var vdesc=      '';
-		var vattr=      $.PageArray[ii][6];             	// extra css attributes
-		var valarm=     $.PageArray[ii][7];             	// alarm value to turn text to red
+		var vattr=      $.PageArray[ii][6];         // extra css attributes
+		var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
 		$('#'+vlabel).html( '<div style='+vattr+'>&#9650 ' +var_sunrise+' | &#9660 '+var_sunset+'</div>');
 		$('#desc_'+vlabel).html(txt_sunboth);
 		desc_showsunboth = '&#9650; ' +var_sunrise+' | &#9660; '+var_sunset; // used for cell with time sunrise and sunset including arrow up and arrow down
@@ -815,6 +940,9 @@ format: "json"
 			(+dateArray[6])
 		);
 		var convStringDate = dateObject.toString ( 'd MMM' );		// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
+		var convStringDate = convStringDate.replace('Mar', 'Mrt'); 	// replace some months to NL abbrev
+		var convStringDate = convStringDate.replace('May', 'Mei'); 	// replace some months to NL abbrev
+		var convStringDate = convStringDate.replace('Oct', 'Okt'); 	// replace some months to NL abbrev
 		var convStringTime = dateObject.toString ( 'HH:mm' );		// the part of the 'Last Seen' that creates the TIME
 		
 		//Added by GZ used for last seen to only show day if <> today
@@ -887,7 +1015,8 @@ $.refreshTimer = setInterval(RefreshData, 8000); //was 8000
 function SceneToggle(idx, switchcmd)
 	{
 	$.ajax({
-	url: $.domoticzurl+"/json.htm?type=command&param=switchscene" + "&idx=" + idx + "&switchcmd=" + switchcmd + "&level=0",
+	//url: $.domoticzurl+"/json.htm?type=command&param=switchscene" + "&idx=" + idx + "&switchcmd=" + switchcmd + "&level=0",
+	url: $.domoticzurl+"/json.htm?type=command&param=switchscene" + "&idx=" + idx + "&switchcmd=" + switchcmd,
 	async: false,
 	dataType: 'json',
 	success: function(){
@@ -904,7 +1033,8 @@ function SceneToggle(idx, switchcmd)
 function SwitchToggle(idx, switchcmd)
 	{
 	$.ajax({
-	url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=" + switchcmd + "&level=0",
+	//url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=" + switchcmd + "&level=0",
+	url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=" + switchcmd,
 	async: false,
 	dataType: 'json',
 	success: function(){
@@ -961,6 +1091,7 @@ function ChangeStatus(OpenDicht,level,idx,currentlevel)
 		if (OpenDicht == "plus")
 			{
 			var d = ((level + 10)/100 * 16) +  0.5;
+			//console.log("in plus",d,level);
 			if(d > 16) {
 				d = 16;
 			}
@@ -998,10 +1129,9 @@ function ChangeStatus(OpenDicht,level,idx,currentlevel)
 	RefreshData();
 	}
 
-// blinds percentage
-function BlindChangeStatus(OpenDicht,level,idx)
+// zwave dimmer
+function ZWaveDim(OpenDicht,level,idx)
 {
-
         if (OpenDicht == "plus")
           {
                 //var d = 0;
@@ -1017,7 +1147,11 @@ function BlindChangeStatus(OpenDicht,level,idx)
                                 console.log('SUCCES');
 								//console.log('level oud: ' + level);
 								//console.log('level nieuw: ' + d);
+								//console.log('idx: ' + idx);
 								z_dimmer = d; //To show new value for ZWave dimmer
+								z_whichdimmer = idx; //Only show new value for dimmer which was pressed
+								//console.log('waarde: ' + z_dimmer);
+								//console.log('idx: ' + z_whichdimmer);
                         },
                         error: function(){
                                 console.log('ERROR');
@@ -1041,7 +1175,73 @@ function BlindChangeStatus(OpenDicht,level,idx)
                                 console.log('SUCCES');
 								//console.log('level oud: ' + level);
 								//console.log('level nieuw: ' + d);
+								//console.log('idx: ' + idx);
 								z_dimmer = d; //To show new value for ZWave dimmer
+								z_whichdimmer = idx; //Only show new value for dimmer which was pressed
+								//console.log('waarde: ' + z_dimmer);
+								//console.log('idx: ' + z_whichdimmer);
+                        },
+                        error: function(){
+                                console.log('ERROR');
+                        }
+                });
+          }
+//sleep(3000);        
+RefreshData();
+}
+	
+// blinds percentage
+function BlindChangeStatus(OpenDicht,level,idx)
+{
+
+        if (OpenDicht == "plus")
+          {
+                //var d = 0;
+				var d = level + 10;
+                if(d > 100) {
+					d = 100;
+                }
+                $.ajax({
+                        url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
+                        async: false,
+                        dataType: 'json',
+                        success: function(){
+                                console.log('SUCCES');
+								//console.log('level oud: ' + level);
+								//console.log('level nieuw: ' + d);
+								//console.log('idx: ' + idx);
+								//o_dimmer = d; //To show new value for dimmer
+								//o_whichdimmer = idx; //Only show new value for dimmer which was pressed
+								//console.log('waarde: ' + o_dimmer);
+								//console.log('idx: ' + o_whichdimmer);
+                        },
+                        error: function(){
+                                console.log('ERROR');
+                        }
+                });
+          }
+          else
+          {
+                
+				//var d = 0;
+				var d = level - 10;
+				//console.log("in min",d,level);
+				if( d < 0 ){
+					d = 0;
+				}
+                $.ajax({
+                        url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
+                        async: false,
+                        dataType: 'json',
+                        success: function(){
+                                console.log('SUCCES');
+								//console.log('level oud: ' + level);
+								//console.log('level nieuw: ' + d);
+								//console.log('idx: ' + idx);
+								//o_dimmer = d; //To show new value for ZWave dimmer
+								//o_whichdimmer = idx; //Only show new value for dimmer which was pressed
+								//console.log('waarde: ' + o_dimmer);
+								//console.log('idx: ' + o_whichdimmer);
                         },
                         error: function(){
                                 console.log('ERROR');
@@ -1101,12 +1301,12 @@ function ChangeVolumeUp(idx)
 	$.ajax({
 	url: "sonos/index.php?zone=" + idx + "&action=VolumeUp",
 	async: true,
-	dataType: 'json',
+	dataType: 'html', //was json but that always gave an error although it's working
 	success: function(){
-	console.log('SUCCES');
+	console.log('Volume up');
 	},
 	error: function(){
-	console.log('Volume up'); //shows error in console even though it is working fine
+	console.log('ERROR');
 	}
 	});
 	RefreshData();
@@ -1118,12 +1318,84 @@ function ChangeVolumeDown(idx)
 	$.ajax({
 	url: "sonos/index.php?zone=" + idx + "&action=VolumeDown",
 	async: true,
-	dataType: 'json',
+	dataType: 'html',
 	success: function(){
-	console.log('SUCCES');
+	console.log('Volume down');
 	},
 	error: function(){
-	console.log('Volume down'); //shows error in console even though it is working fine
+	console.log('ERROR');
+	}
+	});
+	RefreshData();
+	}
+	
+//Change radio of Sonos
+function ChangeRadio(idx)
+	{
+	$.ajax({
+	url: "sonos/index.php?zone=" + idx + "&action=NextRadio",
+	async: true,
+	dataType: 'html',
+	success: function(){
+	console.log('Next radio station');
+	},
+	error: function(){
+	console.log('ERROR');
+	//console.log('idx: ' + idx);
+	}
+	});
+	RefreshData();
+	}
+	
+//Change radio of Sonos
+function ChangeRadioPrev(idx)
+	{
+	$.ajax({
+	url: "sonos/index.php?zone=" + idx + "&action=PrevRadio",
+	async: true,
+	dataType: 'html',
+	success: function(){
+	console.log('Previous radio station');
+	},
+	error: function(){
+	console.log('ERROR');
+	//console.log('idx: ' + idx);
+	}
+	});
+	RefreshData();
+	}
+	
+//Next song of Sonos
+function ChangeNextSong(idx)
+	{
+	$.ajax({
+	url: "sonos/index.php?zone=" + idx + "&action=Next",
+	async: true,
+	dataType: 'html',
+	success: function(){
+	console.log('Next radio station');
+	},
+	error: function(){
+	console.log('ERROR');
+	//console.log('idx: ' + idx);
+	}
+	});
+	RefreshData();
+	}
+	
+//Previous song of Sonos
+function ChangePreviousSong(idx)
+	{
+	$.ajax({
+	url: "sonos/index.php?zone=" + idx + "&action=Previous",
+	async: true,
+	dataType: 'html',
+	success: function(){
+	console.log('Next radio station');
+	},
+	error: function(){
+	console.log('ERROR');
+	//console.log('idx: ' + idx);
 	}
 	});
 	RefreshData();
