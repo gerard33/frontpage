@@ -77,9 +77,9 @@ a:hover { text-decoration: none; color: #333333; }
 	//color: #ADABAE;
 	color: #333333;
 	font-size: 11px;
-	margin-top: -27px;
-	height: 27px;
-	line-height: 68px;
+	margin-top: 0px; /*-27px */
+	height: 0px; /*27px */
+	line-height: 140%; /*68px */
 	position: relative;
 	z-index: 40;
 }
@@ -304,7 +304,8 @@ a:hover { text-decoration: none; color: #333333; }
 	margin-top: 5px; 
 	width: 1050px;height: 570px;	
 }
-#popup_switch, #popup_protected, #popup_camera, #popup_camera2{
+#popup_switch, #popup_protected, #popup_camera, #popup_camera1, #popup_camera2, #popup_camera3
+{
     display: none;
     position: absolute;
     top: 50%;
@@ -327,20 +328,15 @@ a:hover { text-decoration: none; color: #333333; }
 	-webkit-border-radius: 15px 15px 15px 15px;
 	border-radius: 15px 15px 15px 15px;	
 }
-#popup_camera{
-    width: 640px;
-    height: 480px;
-    margin-left: -325px;
-    margin-top: -245px;                 
-
-}
-#popup_camera2 {
+#popup_camera, #popup_camera1, #popup_camera2, #popup_camera3
+{
     width: 640px;
     height: 480px;
     margin-left: -325px;
     margin-top: -245px;                 
 }
-#fade{
+#fade
+{
     display: none;
     position: fixed;
     top: 0%;
@@ -353,7 +349,8 @@ a:hover { text-decoration: none; color: #333333; }
     opacity:.70;
     filter: alpha(opacity=70);
 }
-.camera {
+.camera
+{
   background: url(offline.jpg) no-repeat;
   -moz-opacity: 0.7;
   opacity:.70;
@@ -392,4 +389,45 @@ a:hover { text-decoration: none; color: #333333; }
 
 a {
 outline-style:none;
+}
+
+#loading {
+   width: 1024px;
+   height: 750px;
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   margin-left: auto;
+   margin-right: auto;
+   display: block;
+   /* opacity: 0.9;
+   background-color: #fff; */
+   z-index: 99;
+   text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100px;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: auto; */
+  margin-bottom: auto;
+  z-index: 100;
+}
+#loading-image2 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 420px; /* 520px */
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: auto; */
+  margin-bottom: auto;
+  z-index: 100;
 }
