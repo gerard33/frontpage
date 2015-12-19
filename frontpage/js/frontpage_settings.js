@@ -1,8 +1,8 @@
 <!-- Change the text for on/off switches -->
-<!-- var txt_on = '<img src=icons/on.png>'; -->
-<!-- var txt_off = '<img src=icons/off.png>'; -->
-var txt_on = 'Aan';
-var txt_off = 'Uit';
+var txt_on = '<img src=icons/on.png>';
+var txt_off = '<img src=icons/off.png>'; 
+// var txt_on = 'Aan';
+// var txt_off = 'Uit';
 var txt_zonon = 'Uit'; <!-- Dicht -->
 var txt_zonoff = 'In'; <!-- Open -->
 var txt_zonstopped = 'Gestopt';
@@ -45,36 +45,36 @@ var color_off = ';color:#E24E2A;';
 var show_sonos_volume = true; <!-- show Sonos volume in desc text -->
 
 <!-- Change idx of special items -->
-var idx_CPUmem = '11';
-var idx_HDDmem = '13';
-var idx_CPUusage = '17';
-var idx_CPUtemp = '1100';
+var idx_CPUmem = '6';
+var idx_HDDmem = '8';
+var idx_CPUusage = '10';
+var idx_CPUtemp = '9';
 var idx_SunState = '66';
 var idx_IsDonker = '66'; <!-- for day night css -->
 var idx_FibaroWP = '1100';
-var idx_Alarm = '109';
-var idx_Rainmeter = '39';
-var idx_Temp1 = '18';
-var idx_Temp2 = '22';
-var idx_Temp3 = '178';
-var idx_Temp_buiten = '247';
-var idx_Tempf = '154';
+var idx_Alarm = '11109';
+var idx_Rainmeter = '12339';
+//var idx_Temp1 = '18';
+//var idx_Temp2 = '22';
+//var idx_Temp3 = '178';
+//var idx_Temp_buiten = '805';
+//var idx_Tempf = '154';
 var idx_Iphone5s = '214';
 var idx_Telefoon_m = '185';
 var idx_Voordeur = '23'; //'207';
 var idx_Garagedeur = '27'; //'208';
-var idx_WindRichting = '100';
-var idx_WindSnelheid = '101';
+var idx_WindRichting = '13';
+var idx_WindSnelheid = '13';
 var idx_BewegingF = '145';
 var idx_LuxF = '147';
 var idx_ZonV = '110';
 var idx_ZonA = '111';
 var idx_Barometer = '49';
 var idx_Visibility = '53';
-var idx_Usage1 = '140';
-var idx_Usage2 = '142';
-var idx_UsageTot1 = '181';
-var idx_UsageTot2 = '182';
+//var idx_Usage1 = '616';
+//var idx_Usage2 = '406';
+//var idx_UsageTot1 = '616';
+//var idx_UsageTot2 = '406';
 var idx_Pi = '218';
 var idx_PC = '216';
 var idx_TV = '240';
@@ -113,97 +113,103 @@ var doorbell_cmd = "lightbox_open('camera1', 15400);"
 // ############################################################################################################
 
 $(document).ready(function() {
-        $.roomplan=0;	// define roomplan in Domoticz and create items below.
-        $.domoticzurl="http://192.168.1.102:8084";
-		//format: idx, value, label, description, lastseen(1 when lastseen is wanted, 2 is only time), plusmin button or protected (0 for empty, 1 for buttons, 2 for volume of Sonos, 4 for protected, 5 for zwave dimmer, 6 for protected when on), [override css], [alarm value]
-        $.PageArray = [
+    $.roomplan = 2;	// define roomplan in Domoticz and create items below.
+    $.domoticzurl = "http://192.168.1.49:8080";
+    //format: idx, value, label, description,
+    // lastseen(1 when lastseen is wanted, 2 is only time),
+    // plusmin button or protected (0 for empty, 1 for buttons, 2 for volume of Sonos, 4 for protected, 5 for zwave dimmer, 6 for protected when on), [override css], [alarm value]
+    $.PageArray = [
 
-	['0','Desc',		'cell1',	'Badkamer','0','0'], //Desc means show the sub cells
-	['22','Temp',		'cell1a',	'Badkamer','1','0'], //Lastseen only from cell_a possible
-	['22','Humidity',	'cell1b',	'Badkamer','0','0'],
-	['0','Desc',		'cell2',	'Garage','0','0'],
-	['18','Temp',		'cell2a',	'Garage','1','0'],
-	['18','Humidity',	'cell2b',	'Garage','0','0'],
-	['0','Data',		'cell3',	'Camera garage','0','0'],
-	['0','Desc',		'cell4',	'Kamer | Buiten','0','0'],
-	['178','Data',		'cell4a',	'Kamer','1','0'],
-	['247','Data',		'cell4b',	'Buiten','0','0'],
-	['0','Desc',		'cell5',	'Regen | Regenkans','0','0'],
-	['39','Rain',		'cell5a',	'Regen','1','0'],
-	['97','Humidity',	'cell5b',	'Regenkans','0','0'],
+        ['0','Desc',				'cell1',	'Buiten','0','0'], //Desc means show the sub cells
+        ['805','Temp',				'cell1a',	'Buiten','1','0'], //Lastseen only from cell_a possible
+        ['805','Humidity',			'cell1b',	'Buiten','0','0'],
+        ['0','Desc',				'cell2',	'Badkamer','0','0'],
+        ['363','Temp',				'cell2a',	'Badkamer','1','0'],
+        ['363','Humidity',			'cell2b',	'Badkamer','0','0'],
+        ['12','ForecastStr',		'cell3',	'Woonkamer','0','0'],
+        ['0','Desc',				'cell4',	'Schuurtje','0','0'],
+        ['802','Temp',				'cell4a',	'Schuurtje','1','0'],
+        ['802','Humidity',			'cell4b',	'Schuurtje','0','0'],
+        ['0','Desc',				'cell5',	'Boven','0','0'],
+        ['366','Temp',				'cell5a',	'Boven','1','0'],
+        ['366','Humidity',			'cell5b',	'Boven','0','0'],
 
-	['8','Level',		'cell6',	'Hue kamer bank','1','1'],
-	['9','Level',		'cell7',	'Hue kamer gang','1','1'],
-	['116','Status',	'cell8',	'Sonos Keuken','1','2'],
-	['0','Status',		'cell9',	'Sonos Keuken','1','2'],
-	['240','Status',	'cell10',	'TV','1','6'], //6 is protected when on
+        ['1009','Status',			'cell6',	'AppleTV XBMC','1','1'],
+        ['371','Level',				'cell7',	'Verlichting Links','1','1'],
+        ['447','Temp',				'cell8',	'Woonkamer','1','0'],
+        ['319','Status',			'cell9',	'Verlichting Rechts','1','1'],
+        ['372','Status',			'cell10',	'AppleTV 3','1','0'], //6 is protected when on
 
-	['24','Level',		'cell11',	'Keuken','1','1'],
-	['25','Status',		'cell12',	'Keukenkastjes','1','0'],
-	['115','Status',	'cell13',	'Sonos Kantoor','1','2'],
-	['171','Level',		'cell14',	'Kantoor','1','5'], //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
-	//['177','Status',	'cell15',	'Tuin','1','0'],
-	['103','Level',		'cell15',	'Achtertuin','1','1'],
+        ['935','Status',			'cell11',	'RPi Zolder','1','0'],
+        ['936','Status',			'cell12',	'RPi Meterkast','1','0'],
+        ['503','Status',			'cell13',	'Status Receiver','1','1'],
+        ['330','Status',			'cell14',	'Status TV','1','0'],
+        //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
+        //['177','Status',			'cell15',	'Tuin','1','0'],
+        ['933','Status',			'cell15',	'Synology','1','0'],
 
-	['23','Status',		'cell16',	'Voordeur','1','4'],
-	['27','Status',		'cell17',	'Garagedeur','1','4'],
-	['200','Status',	'cell18',	'Deurbel','1','4'],
-	//['10','Status',	'cell18',	'iPhone 5s','1','4'],
-	['71','Data',		'cell19',	'Scherm Voor','1','0'],
-	['79','Data',		'cell20',	'Scherm Achter','1','0'],
+        ['616','CounterToday',		'cell16',	'Vandaag','1','0'],
+        ['616','Usage',				'cell17',	'Huidig gebruik','1','0'],
+        //['0','Desc',				'cell18',	'Windrichting','0','0'],
+        ['13','DirectionStr',		'cell18',	'Windrichting','0','0'],
+        //['13','DirectionStr',		'cell18b',	'Windrichting','0','0'],
+        //['10','Status',			'cell18',	'iPhone 5s','1','4'],
+        ['406','Usage',				'cell19',	'Windmolen nu','1','0'],
+        ['406','CounterToday',		'cell20',	'Windmolen vandaag','1','0'],
 
-	['66','Status',		'cell21',	'Zon','2','0'],
-	['0','Tijd',		'cell22',	'Tijd','0','0'],
-	['109','Data',		'cell23',	'Alarm','1','0'],
-	
-	['0','Temp',		'cell25',	'Temperatuur buiten (C)','0','0'],
-	
-	['0','SunBoth',		'cell26',	'Dummy cel voor bepaling zon op en zon onder','0','0'],
+        ['1006','Status',			'cell21',	'Receiver boven','1','0'],
+        ['0','Tijd',				'cell22',	'Tijd','0','0'],
+        ['1003','Status',			'cell23',	'Buitenverlichting','1','1'],
 
-	['37','Status',		'cell00',	'IsDonker','0','0'],
+        ['0','Temp',				'cell25',	'Temperatuur buiten (C)','0','0'],
 
-	['0','Desc',		'cell2_1',	'Barometer + zicht','0','0'],
-	['49','Barometer',	'cell2_1a',	'Barometer','1','0'],
-	['53','Visibility',	'cell2_1b',	'Zicht','0','0'],
-	['0','Desc',		'cell2_2',	'Windrichting','0','0'],
-	['100','Data',		'cell2_2a',	'Windrichting','1','0'],
-	['101','Data',		'cell2_2b',	'Windsnelheid','0','0'],
-	//['49','ForecastStr','cell2_3',	'Weersvoorspelling','0','0'],
-	['0','ForecastStr',	'cell2_3',	'Weersvoorspelling','0','0'],
-	['0','Desc',		'cell2_4',	'NAS CPU + HDD','0','0'],
-	['17','Data',		'cell2_4a',	'CPU','1','0'],
-	['13','Data',		'cell2_4b',	'HDD','0','0'],
-	['0','Desc',		'cell2_5',	'Temp + Lux F','1','0'],
-	['154','Data',		'cell2_5a',	'Temperatuur Fibaro','1','0'],
-	['147','Data',		'cell2_5b',	'Temperatuur Fibaro','1','0'],
+        ['0','SunBoth',				'cell26',	'Dummy cel voor bepaling zon op en zon onder','0','0'],
 
-	['43','Level',		'cell2_6',	'Lamp slaapkamer','1','1'],
-	['21','Status',		'cell2_7',	'Slaapkamer kast','1','0'],
-	//['145','Data',		'cell2_8',	'Bewegingssensor F','1','4'],
-	['216','Data',		'cell2_8',	'PC','1','6'],
-	['32','Status',		'cell2_9',	'Led gang','1','0'],
-	['33','Status',		'cell2_10',	'Led zolder','1','0'],
+        ['37','Status',				'cell00',	'IsDonker','0','0'],
 
-	['29','Status',		'cell2_11',	'Lamp TV','1','0'],
-	['30','Status',		'cell2_12',	'Lamp vensterbank','1','0'],
-	['34','Status',		'cell2_13',	'Garage','1','0'],
-	['214','Status',	'cell2_14',	'Telefoon G','1','4'],
-	['185','Status',	'cell2_15',	'Telefoon M','1','4'],
+        // Page 2
+        ['0','Desc',				'cell2_1',	'Zon','0','0'],
+        ['0','SunRise',			'cell2_1a',	'Zon op','1','0'],
+        ['0','SunSet',			'cell2_1b',	'Zon onder','0','0'],
+        ['0','Desc',				'cell2_2',	'Windrichting','0','0'],
+        ['100','Data',				'cell2_2a',	'Windrichting','1','0'],
+        ['101','Data',				'cell2_2b',	'Windsnelheid','0','0'],
+        //['49','ForecastStr',		'cell2_3',	'Weersvoorspelling','0','0'],
+        ['0','ForecastStr',			'cell2_3',	'Weersvoorspelling','0','0'],
+        ['0','Desc',				'cell2_4',	'NAS CPU + HDD','0','0'],
+        ['17','Data',				'cell2_4a',	'CPU','1','0'],
+        ['13','Data',				'cell2_4b',	'HDD','0','0'],
+        ['0','Desc',				'cell2_5',	'Temp + Lux F','1','0'],
+        ['154','Data',				'cell2_5a',	'Temperatuur Fibaro','1','0'],
+        ['147','Data',				'cell2_5b',	'Temperatuur Fibaro','1','0'],
 
-	['140','Data',		'cell2_16',	'Droger - huidig','1','0'],
-	['139','Status',	'cell2_17',	'Droger','1','0'],
-	['218','Status',	'cell2_18',	'Raspberry Pi','1','4'],
-	['141','Status',	'cell2_19',	'IJskast','1','0'],
-	['142','Data',		'cell2_20',	'IJskast - huidig','1','0'],
+        ['0','Desc',				'cell2_6',	'Zon','1','1'],
+        ['21','Status',				'cell2_7',	'Slaapkamer kast','1','0'],
+        //['145','Data',			'cell2_8',	'Bewegingssensor F','1','4'],
+        ['8','Data',				'cell2_8',	'HDD /','1','0'],
+        ['10','Data',				'cell2_9',	'CPU Usage','1','0'],
+        ['33','Status',				'cell2_10',	'Led zolder','1','0'],
 
-	['182','Data',		'cell2_21',	'Droger - totaal','1','0'], //CounterToday, Usage
-	['0','Tijd',		'cell2_22',	'Tijd','0','0'],
-	['181','Data',		'cell2_23',	'IJskast - totaal','1','0'],
-	['0','ForecastStr','cell2_25',	'Weersvoorspelling (FC)','0','0'],
+        ['29','Status',				'cell2_11',	'Lamp TV','1','0'],
+        ['30','Status',				'cell2_12',	'Lamp vensterbank','1','0'],
+        ['34','Status',				'cell2_13',	'Garage','1','0'],
+        ['214','Status',			'cell2_14',	'Telefoon G','1','4'],
+        ['185','Status',			'cell2_15',	'Telefoon M','1','4'],
+
+        ['616','Data',				'cell2_16',	'Verbruik - huidig','1','0'],
+        ['139','Status',			'cell2_17',	'Droger','1','0'],
+        ['218','Status',			'cell2_18',	'Raspberry Pi','1','4'],
+        ['141','Status',			'cell2_19',	'IJskast','1','0'],
+        ['142','Data',				'cell2_20',	'IJskast - huidig','1','0'],
+
+        ['182','Data',				'cell2_21',	'Droger - totaal','1','0'], //CounterToday, Usage
+        ['0','Tijd',				'cell2_22',	'Tijd','0','0'],
+        ['181','Data',				'cell2_23',	'IJskast - totaal','1','0'],
+        ['0','ForecastStr',			'cell2_25',	'Weersvoorspelling (FC)','0','0'],
 	];
 	$.PageArray_Scenes = [
 	
-	['5','Status',		'cell9',	'Lampen kamer','1','0'],
+	//['5','Status',		'cell9',	'Lampen kamer','1','0'],
 	//['7','Status',		'cell13',	'Lamp achtertuin','1','0'],
 
 	];
