@@ -66,22 +66,7 @@ function RefreshData()
                         var vstatus = item["Status"];		// current status
                         var vls = item["LastUpdate"];		// Last Seen
 
-                        var dateString = item["LastUpdate"];	// 'Last Seen' string used to convert into a nicer date/time
-                        var reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
-                        var dateArray = reggie.exec(dateString);
-                        var dateObject = new Date(
-                            (+dateArray[1]),
-                            (+dateArray[2])-1, 				// Careful, month starts at 0!
-                            (+dateArray[3]),
-                            (+dateArray[4]),
-                            (+dateArray[5]),
-                            (+dateArray[6])
-                        );
-                        var convStringDate = dateObject.toString ( 'd MMM' );		// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
-                        var convStringDate = convStringDate.replace('Mar', 'Mrt'); 	// replace some months to NL abbrev
-                        var convStringDate = convStringDate.replace('May', 'Mei'); 	// replace some months to NL abbrev
-                        var convStringDate = convStringDate.replace('Oct', 'Okt'); 	// replace some months to NL abbrev
-                        var convStringTime = dateObject.toString ( 'HH:mm' );		// the part of the 'Last Seen' that creates the TIME
+                        var lastSeenArray = getLastSeen(item["LastUpdate"]);
 
                         //Added by GZ used for last seen to only show day if <> today
                         var thisday = (new Date()).toISOString().slice(0,10);
@@ -113,13 +98,13 @@ function RefreshData()
                         //Check whether we want to add the last seen to the block
                         if (lastseen == '1') {
                             if (thisday == vdate) {
-                                $('#ls_'+vlabel).html(convStringTime) 						// Show only the time if last change date = today
+                                $('#ls_' + vlabel).html(lastSeenArray["time"]) 						// Show only the time if last change date = today
                             }
                             else {
-                                $('#ls_'+vlabel).html(convStringTime+' | '+convStringDate)	// Change this 'Last Seen' into something you like
+                                $('#ls_' + vlabel).html(lastSeenArray["time"] + ' | ' + lastSeenArray["date"])	// Change this 'Last Seen' into something you like
                             }
                         } else if (lastseen == '2') {
-                            $('#ls_'+vlabel).html(convStringTime)							// Show only the time
+                            $('#ls_' + vlabel).html(lastSeenArray["time"])							// Show only the time
                         }
 
                         //switch layout cell
@@ -978,5 +963,27 @@ function getWeatherData(vdata)
         vdesc = weatherContent.nightText
     }
     return [vdata, vdesc];
+}
+
+function getLastSeen(dateString)
+{
+    var lastSeenArray = [];
+    var reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
+    var dateArray = reggie.exec(dateString);
+    var dateObject = new Date(
+        (+dateArray[1]),
+        (+dateArray[2])-1, 				// Careful, month starts at 0!
+        (+dateArray[3]),
+        (+dateArray[4]),
+        (+dateArray[5]),
+        (+dateArray[6])
+    );
+    var convStringDate = dateObject.toString('d MMM');		// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
+    var convStringDate = convStringDate.replace('Mar', 'Mrt'); 	// replace some months to NL abbrev
+    var convStringDate = convStringDate.replace('May', 'Mei'); 	// replace some months to NL abbrev
+    lastSeenArray["date"] = convStringDate.replace('Oct', 'Okt'); 	// replace some months to NL abbrev
+    lastSeenArray["time"] = dateObject.toString ('HH:mm');		// the part of the 'Last Seen' that creates the TIME
+
+    return lastSeenArray;
 }
 
