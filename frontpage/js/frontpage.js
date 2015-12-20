@@ -56,13 +56,13 @@ function RefreshData()
                 for( var ii = 0, len = $.PageArray.length; ii < len; ii++ ) {
                     if( $.PageArray[ii][0] === item.idx ) {	// Domoticz idx number
                         var vtype = $.PageArray[ii][1];		// Domoticz type (like Temp, Humidity)
-                        var vlabel = $.PageArray[ii][2];		// cell number from HTML layout
+                        var vlabel = $.PageArray[ii][2];	// cell number from HTML layout
                         var vdesc = $.PageArray[ii][3];		// description
                         var lastseen = $.PageArray[ii][4];	// Display lastseen or not
                         var vplusmin = $.PageArray[ii][5];	// minplus buttons
                         var vattr = $.PageArray[ii][6];		// extra css attributes
-                        var valarm = $.PageArray[ii][7];		// alarm value to turn text to red
-                        var vdata = item[vtype];				// current value
+                        var valarm = $.PageArray[ii][7];	// alarm value to turn text to red
+                        var vdata = item[vtype];			// current value
                         var vstatus = item["Status"];		// current status
                         var vls = item["LastUpdate"];		// Last Seen
 
@@ -263,16 +263,7 @@ function RefreshData()
                                     vdesc = vdesc + " | " + vs1;						//show volume in desc text when Sonos is on
                                 }
                             }
-                        vdata = min.concat(hlp,plus);
-                        //console.log(vdata);
-                        }
-
-                        //Thermostat
-                        if(vtype == 'SetPoint' && vplusmin > 0) {
-                            var hlp = '<span style='+vattr+'>'+ vdata+'</span>';
-                            var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=ChangeTherm('plus'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
-                            var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=ChangeTherm('min'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
-                            vdata = min.concat(hlp,plus);
+                            vdata = min.concat(hlp, plus);
                             //console.log(vdata);
                         }
 
@@ -362,63 +353,8 @@ function RefreshData()
                             //console.log(vdata);
                         }
 
-                        // replace forecast (text) with an image
-                        if (vtype == "ForecastStr") {
-                            var weatherContent;
-                            switch (vdata) {
-                                case "Sunny":
-                                    weatherContent = {day: "icons/day_sun.png", night: "icons/night_clear.png", dayText: "Zonnig", nightText: "Helder"};
-                                    break;
-                                case "Clear":
-                                    weatherContent = {day: "icons/day_sun.png", night: "icons/night_clear.png", dayText: "Helder", nightText: "Helder"};
-                                    break;
-                                case "Partly Cloudy":
-                                    weatherContent = {day: "icons/day_partlycloudy.png", night: "icons/night_partlycloudy.png", dayText: "Gedeeltelijk bewolkt", nightText: "Bewolkt"};
-                                    break;
-                                case "Cloudy":
-                                    weatherContent = {day: "icons/day_cloudy.png", night: "icons/night_cloudy.png", dayText: "Bewolkt", nightText: "Bewolkt"};
-                                    break;
-                                case "Rain":
-                                    weatherContent = {day: "icons/day_rain.png", night: "icons/night_rain.png", dayText: "Regen", nightText: "Regen"};
-                                    break;
-                                case "Snow":
-                                    weatherContent = {day: "icons/day_rain.png", night: "icons/night_snow.png", dayText: "Sneeuw", nightText: "Sneeuw"};
-                                    break;
-                                case "Fog":
-                                    weatherContent = {day: "icons/day_fog.png", night: "icons/night_fog.png", dayText: "Mist", nightText: "Mist"};
-                                    break;
-                                case "Hail":
-                                    weatherContent = {day: "icons/day_hail.png", night: "icons/night_hail.png", dayText: "Hagel", nightText: "Hagel"};
-                                    break;
-                                case "Thunderstorm":
-                                    weatherContent = {day: "icons/day_thunderstorm.png", night: "icons/night_thunderstorm.png", dayText: "Onweersbui", nightText: "Onweersbui"};
-                                    break;
-                                case "Sleet":
-                                    weatherContent = {day: "icons/day_sleet.png", night: "icons/night_sleet.png", dayText: "IJzel", nightText: "IJzel"};
-                                    break;
-
-                                default:
-                                    weatherContent = {day: "icons/day_sun.png", night: "icons/day_sun.png", dayText: "Zonnig", nightText: "Helder"};
-                            }
-
-                            vdata = "<img src='" + weatherContent.day + "' width='272' height='255' style='margin-top: -30px;'>";
-                            vdesc = weatherContent.dayText
-                            if (IsNight) {
-                                vdata = "<img src='" + weatherContent.night + "' width='272' height='255' style='margin-top: -30px;'>";
-                                vdesc = weatherContent.nightText
-                            }
-
-                        }
-
-                        //doorbell
-                        if (item.idx == idx_doorbell && vdata == doorbell_status) {
-                            lightbox_open('camera1', 15400);
-                            vdata=new String(vdata).replace( "On", "Tringgg");
-                            //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
-                        }
-
-                        // replace text when phone is at home
                         switch (item.idx) {
+                            // replace text when phone is at home
                             case idx_Iphone5s:
                             case idx_Telefoon_m:
                                 if (vdata == txt_on) {
@@ -434,6 +370,43 @@ function RefreshData()
                                     vdata = "Dicht";
                                 } else {
                                     vdata = "Open";
+                                    alarmcss = color_off;
+                                }
+                                break;
+                            case idx_doorbell:
+                                if (vdata == doorbell_status) {
+                                    lightbox_open('camera1', 15400);
+                                    vdata=new String(vdata).replace( "On", "Tringgg");
+                                    //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
+                                }
+                                break;
+                            case idx_Barometer:
+                                if (vdata > 100){ // Added > 100 because idx_Barometer is also used for weather prediction, idx=49
+                                    vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
+                                }
+                                break;
+                            case idx_Visibility:
+                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
+                                break;
+                            case idx_LuxF:
+                                vdata = new String(vdata).replace("Lux", "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
+                                break;
+                            case idx_WindSnelheid:
+                                vdata = new String(vdata).replace( " m/s","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>");
+                                break;
+                            case idx_BewegingF:
+                                if(vdata == 'On,'){
+                                    vdata = new String(vdata).replace(",", "");
+                                    vdata = new String(vdata).replace("On", "Aan");
+                                }
+                                break;
+                            case idx_FibaroWP:
+                                vdata = Math.round(vdata * 100) / 100;
+                                if (vdata > 40) {
+                                    vdata = '<img src=icons/pump_on.png>';
+                                    alarmcss = color_on;
+                                } else if (vdata < 40 && vdata > 0.9) {
+                                    vdata = '<img src=icons/pump_off.png>';
                                     alarmcss = color_off;
                                 }
                                 break;
@@ -454,31 +427,27 @@ function RefreshData()
                         }
 
                         // set alarm icons night
-                        if(item.idx == idx_Alarm && vdata == 'Arm Away' && IsNight){
-                            vdata=new String(vdata).replace( "Arm Away","<a class=iframe href=secpanel/index.html><img src=icons/alarm_away.png vspace=6></a>");
-                            vdesc=desc_alarm_away;
-                        }
-                        if(item.idx == idx_Alarm && vdata == 'Arm Home' && IsNight){
-                            vdata=new String(vdata).replace( "Arm Home","<a class=iframe href=secpanel/index.html><img src=icons/alarm_home.png vspace=6></a>");
-                            vdesc=desc_alarm_home;
-                        }
-                        if(item.idx == idx_Alarm && vdata == 'Normal' && IsNight){
-                            vdata=new String(vdata).replace( "Normal","<a class=iframe href=secpanel/index.html><img src=icons/alarm_off.png vspace=6></a>");		// night
-                            vdesc=desc_alarm_off;
-                        }
+                        if (item.idx == idx_Alarm) {
+                            switch (vdata) {
+                                case "Arm Away":
+                                    vdesc = desc_alarm_away;
+                                    icon = "alarm_away.png";
+                                    break;
 
-                        // set alarm icons day
-                        if(item.idx == idx_Alarm && vdata == 'Arm Away' && !IsNight){
-                            vdata=new String(vdata).replace( "Arm Away","<a class=iframe href=secpanel/index.html><img src=icons/alarm_away_w.png vspace=6></a>");
-                            vdesc=desc_alarm_away;
-                        }
-                        if(item.idx == idx_Alarm && vdata == 'Arm Home' && !IsNight){
-                            vdata=new String(vdata).replace( "Arm Home","<a class=iframe href=secpanel/index.html><img src=icons/alarm_home_w.png vspace=6></a>");
-                            vdesc=desc_alarm_home;
-                        }
-                        if(item.idx == idx_Alarm && vdata == 'Normal' && !IsNight){
-                            vdata=new String(vdata).replace( "Normal","<a class=iframe href=secpanel/index.html><img src=icons/alarm_off_w.png vspace=6></a>");		// day
-                            vdesc=desc_alarm_off;
+                                case "Arm Home":
+                                    vdesc = desc_alarm_home;
+                                    icon = "alarm_away.png";
+                                    break;
+
+                                case "Normal":
+                                    vdesc = desc_alarm_off;
+                                    icon = "alarm_away.png";
+                                    break;
+                            }
+                            if (!IsNight) {
+                                icon = icon.replace(".png", "_w.png");
+                            }
+                            vdata = "<a class='iframe' href='secpanel/index.html'><img src='icons/" + icon + "' vspace='6'></a>";
                         }
 
                         // set alarm icons when using on off
@@ -493,6 +462,21 @@ function RefreshData()
 
                         // set celsius, %, mm, W, kWh
                         switch (vtype) {
+                            case "SetPoint":
+                                //Thermostat
+                                if (vplusmin > 0) {
+                                    var hlp = '<span style='+vattr+'>'+ vdata+'</span>';
+                                    var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=ChangeTherm('plus'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
+                                    var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=ChangeTherm('min'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
+                                    vdata = min.concat(hlp,plus);
+                                }
+                                break;
+                            case "ForecastStr":
+                                // replace forecast (text) with an image
+                                descArray = getWeatherData(vdata);
+                                vdata = descArray[0];
+                                vdesc = descArray[1];
+                                break;
                             case "Temp":
                                 if (vdata < 0) {
                                     alarmcss = temp_freeze_color;
@@ -520,51 +504,18 @@ function RefreshData()
                                 break;
                         }
 
-                        // Change font for lux
-                        if(item.idx == idx_LuxF){
-                            vdata=new String(vdata).replace( "Lux","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
-                        }
-                        // Replace m/s in smaller font
-                        if(item.idx == idx_WindSnelheid){
-                            vdata=new String(vdata).replace( " m/s","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>");
-                        }
-                        // Remove , from On for motionsensor Fibaro
-                        if(item.idx == idx_BewegingF && vdata == 'On,'){
-                            vdata=new String(vdata).replace( ",","");
-                            vdata=new String(vdata).replace( "On","Aan");
-                        }
-                        // Add hPA and KM to barometer and visibility
-                        if(item.idx == idx_Barometer && vdata > 100){ // Added > 100 because idx_Barometer is also used for weather prediction, idx=49
-                            vdata=vdata+"<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
-                        }
-                        if(item.idx == idx_Visibility){
-                            vdata=vdata+"<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
-                        }
-
                         // Replace ON and OFF for the virtual switch 'IsDonker' by images
-                        if(item.idx == idx_SunState && vdata == 'Off'){
-                            vdata=new String(vdata).replace( "Off","<img src=icons/sunrise.png vspace=8>");		// day
-                            //vdesc=new String(vdesc).replace( "Zon onder","Zon op");					// replace text in desc
-                            //vdesc=desc_sunrise; //show text
-                            vdesc=desc_showsunboth; //show time sunrise and sunset
-                        }
-                        if(item.idx == idx_SunState && vdata == 'On'){
-                            vdata=new String(vdata).replace( "On","<img src=icons/sunset.png vspace=8>");		// night
-                            //vdesc=new String(vdesc).replace( "Zon op","Zon onder");					// replace text in desc
-                            //vdesc=desc_sunset; //show text
-                            vdesc=desc_showsunboth; //show time sunrise and sunset
-                        }
-
-                        // Rounding code for Fibaro Wall Plug
-                        // set the text to ON instead of displaying the value for idx 107: the Fibaro Wall Plug
-                        if (item.idx == idx_FibaroWP) {
-                            vdata = Math.round(vdata * 100) / 100;
-                            if (vdata > 40) {
-                                vdata = '<img src=icons/pump_on.png>';
-                                alarmcss = color_on;
-                            } else if (vdata < 40 && vdata > 0.9) {
-                                vdata = '<img src=icons/pump_off.png>';
-                                alarmcss = color_off;
+                        if (item.idx == idx_SunState) {
+                            if (vdata == "Off") {
+                                vdata=new String(vdata).replace( "Off","<img src=icons/sunrise.png vspace=8>");		// day
+                                //vdesc=new String(vdesc).replace( "Zon onder","Zon op");					// replace text in desc
+                                //vdesc=desc_sunrise; //show text
+                                vdesc=desc_showsunboth; //show time sunrise and sunset
+                            } else if (vdata == "On") {
+                                vdata=new String(vdata).replace( "On","<img src=icons/sunset.png vspace=8>");		// night
+                                //vdesc=new String(vdesc).replace( "Zon op","Zon onder");					// replace text in desc
+                                //vdesc=desc_sunset; //show text
+                                vdesc=desc_showsunboth; //show time sunrise and sunset
                             }
                         }
 
@@ -656,8 +607,8 @@ function RefreshData()
                             //var vattr=    $.PageArray[ii][6];		// extra css attributes
                             var valarm=     $.PageArray[ii][7];		// alarm value to turn text to red
                             //var vdata=    item[vtype];			// current value
-                            $('#'+vlabel).html( '<div>'+vdata+'</div>');
-                            $('#desc_'+vlabel).html(vdesc);
+                            $('#' + vlabel).html('<div>' + vdata + '</div>');
+                            $('#desc_' + vlabel).html(vdesc);
                             break;
                         case "Tijd": //Special nummer, tijd in cell (test)
                             //var vtype=    $.PageArray[ii][1];		// Domoticz type (like Temp, Humidity)
@@ -667,17 +618,17 @@ function RefreshData()
                             var vattr=    	$.PageArray[ii][5];		// extra css attributes
                             var valarm=     $.PageArray[ii][6];		// alarm value to turn text to red
                             //var vdata=    item[vtype];			// current value
-                            $('#'+vlabel).html( '<div style='+vattr+'>'+vdata+'</div>');
-                            $('#desc_'+vlabel).html(vdesc);
+                            $('#' + vlabel).html('<div style=' + vattr + '>' + vdata + '</div>');
+                            $('#desc_' + vlabel).html(vdesc);
                             break;
 
                         case "Desc":
                             var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
                             var vdesc=      $.PageArray[ii][3];		// show text in bottom
                             var lastseen=	$.PageArray[ii][4];		// show last seen
-                            var vls= 	item["LastUpdate"];			// Last Seen
+                            var vls= 	    item["LastUpdate"];			// Last Seen
                             //$('#'+vlabel).html( '<div style='+vattr+'>'+vdata+'</div>');
-                            $('#desc_'+vlabel).html(vdesc);
+                            $('#desc_' + vlabel).html(vdesc);
                             break;
 
                         case "SunRise":
@@ -685,8 +636,8 @@ function RefreshData()
                             var vdesc=      '';
                             var vattr=      $.PageArray[ii][6];        	// extra css attributes
                             var valarm=     $.PageArray[ii][7];        	// alarm value to turn text to red
-                            $('#'+vlabel).html( '<div style='+vattr+'>'+var_sunrise+'</div>');
-                            $('#desc_'+vlabel).html(txt_sunrise);
+                            $('#' + vlabel).html('<div style=' + vattr + '>' + var_sunrise + '</div>');
+                            $('#desc_' + vlabel).html(txt_sunrise);
                             break;
 
                         case "SunSet":
@@ -694,8 +645,8 @@ function RefreshData()
                             var vdesc=      '';
                             var vattr=      $.PageArray[ii][6];         // extra css attributes
                             var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
-                            $('#'+vlabel).html( '<div style='+vattr+'>'+var_sunset+'</div>');
-                            $('#desc_'+vlabel).html(txt_sunset);
+                            $('#' + vlabel).html('<div style=' + vattr + '>' + var_sunset + '</div>');
+                            $('#desc_' + vlabel).html(txt_sunset);
                             break;
 
                         case "SunBoth":
@@ -703,9 +654,9 @@ function RefreshData()
                             var vdesc=      '';
                             var vattr=      $.PageArray[ii][6];         // extra css attributes
                             var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
-                            $('#'+vlabel).html( '<div style='+vattr+'>&#9650 ' +var_sunrise+' | &#9660 '+var_sunset+'</div>');
-                            $('#desc_'+vlabel).html(txt_sunboth);
-                            desc_showsunboth = '&#9650; ' +var_sunrise+' | &#9660; '+var_sunset; // used for cell with time sunrise and sunset including arrow up and arrow down
+                            $('#' + vlabel).html('<div style=' + vattr + '>&#9650 ' + var_sunrise + ' | &#9660 ' + var_sunset + '</div>');
+                            $('#desc_' + vlabel).html(txt_sunboth);
+                            desc_showsunboth = '&#9650; ' + var_sunrise + ' | &#9660; ' + var_sunset; // used for cell with time sunrise and sunset including arrow up and arrow down
                             break;
                     };
                 }
@@ -979,5 +930,53 @@ function currentTime()
    
    var ret_str = day + " " + datum + " " + month + " " + year + "<br />" + h + ":" + m + "";
    return ret_str;
+}
+
+function getWeatherData(vdata)
+{
+    var weatherContent;
+    switch (vdata) {
+        case "Sunny":
+            weatherContent = {day: "icons/day_sun.png", night: "icons/night_clear.png", dayText: "Zonnig", nightText: "Helder"};
+            break;
+        case "Clear":
+            weatherContent = {day: "icons/day_sun.png", night: "icons/night_clear.png", dayText: "Helder", nightText: "Helder"};
+            break;
+        case "Partly Cloudy":
+            weatherContent = {day: "icons/day_partlycloudy.png", night: "icons/night_partlycloudy.png", dayText: "Gedeeltelijk bewolkt", nightText: "Bewolkt"};
+            break;
+        case "Cloudy":
+            weatherContent = {day: "icons/day_cloudy.png", night: "icons/night_cloudy.png", dayText: "Bewolkt", nightText: "Bewolkt"};
+            break;
+        case "Rain":
+            weatherContent = {day: "icons/day_rain.png", night: "icons/night_rain.png", dayText: "Regen", nightText: "Regen"};
+            break;
+        case "Snow":
+            weatherContent = {day: "icons/day_rain.png", night: "icons/night_snow.png", dayText: "Sneeuw", nightText: "Sneeuw"};
+            break;
+        case "Fog":
+            weatherContent = {day: "icons/day_fog.png", night: "icons/night_fog.png", dayText: "Mist", nightText: "Mist"};
+            break;
+        case "Hail":
+            weatherContent = {day: "icons/day_hail.png", night: "icons/night_hail.png", dayText: "Hagel", nightText: "Hagel"};
+            break;
+        case "Thunderstorm":
+            weatherContent = {day: "icons/day_thunderstorm.png", night: "icons/night_thunderstorm.png", dayText: "Onweersbui", nightText: "Onweersbui"};
+            break;
+        case "Sleet":
+            weatherContent = {day: "icons/day_sleet.png", night: "icons/night_sleet.png", dayText: "IJzel", nightText: "IJzel"};
+            break;
+
+        default:
+            weatherContent = {day: "icons/day_sun.png", night: "icons/day_sun.png", dayText: "Zonnig", nightText: "Helder"};
+    }
+
+    vdata = "<img src='" + weatherContent.day + "' width='272' height='255' style='margin-top: -30px;'>";
+    vdesc = weatherContent.dayText
+    if (IsNight) {
+        vdata = "<img src='" + weatherContent.night + "' width='272' height='255' style='margin-top: -30px;'>";
+        vdesc = weatherContent.nightText
+    }
+    return [vdata, vdesc];
 }
 
