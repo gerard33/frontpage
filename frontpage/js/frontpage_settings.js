@@ -69,7 +69,7 @@ var idx_BewegingF = '145';
 var idx_LuxF = '147';
 var idx_ZonV = '110';
 var idx_ZonA = '111';
-var idx_Barometer = '49';
+var idx_Barometer = '12';
 var idx_Visibility = '53';
 //var idx_Usage1 = '616';
 //var idx_Usage2 = '406';
@@ -177,8 +177,8 @@ $(document).ready(function() {
         //['49','ForecastStr',		'cell2_3',	'Weersvoorspelling','0','0'],
         ['0','ForecastStr',			'cell2_3',	'Weersvoorspelling','0','0'],
         ['0','Desc',				'cell2_4',	'NAS CPU + HDD','0','0'],
-        ['17','Data',				'cell2_4a',	'CPU','1','0'],
-        ['13','Data',				'cell2_4b',	'HDD','0','0'],
+        //['17','Data',				'cell2_4a',	'CPU','1','0'],
+        //['13','Data',				'cell2_4b',	'HDD','0','0'],
         ['0','Desc',				'cell2_5',	'Temp + Lux F','1','0'],
         ['154','Data',				'cell2_5a',	'Temperatuur Fibaro','1','0'],
         ['147','Data',				'cell2_5b',	'Temperatuur Fibaro','1','0'],
@@ -190,11 +190,11 @@ $(document).ready(function() {
         ['10','Data',				'cell2_9',	'CPU Usage','1','0'],
         ['33','Status',				'cell2_10',	'Led zolder','1','0'],
 
-        ['29','Status',				'cell2_11',	'Lamp TV','1','0'],
-        ['30','Status',				'cell2_12',	'Lamp vensterbank','1','0'],
-        ['34','Status',				'cell2_13',	'Garage','1','0'],
-        ['214','Status',			'cell2_14',	'Telefoon G','1','4'],
-        ['185','Status',			'cell2_15',	'Telefoon M','1','4'],
+        ['12','Barometer',				'cell2_11',	'Barometer','1','0'],
+        ['13','Speed',				'cell2_12',	'Windsnelheid','1','0'],
+        ['902','Visibility',				'cell2_13',	'Zicht','1','0'],
+        ['446','Data',			'cell2_14',	'Lux','1','0'],
+        ['0','SunBoth',			'cell2_15',	'SunBoth','1','4'],
 
         ['616','Data',				'cell2_16',	'Verbruik - huidig','1','0'],
         ['139','Status',			'cell2_17',	'Droger','1','0'],

@@ -78,8 +78,6 @@ function RefreshData()
                             vdata = item.idx;
                         } else {
                             // remove too much text
-                            //vdata=new String(vdata).split("Watt",1)[0];
-                            vdata = new String(vdata).split("kWh",1)[0];
                             vdata = new String(vdata).split(" Level:",1)[0];
                             vdata = new String(vdata).replace("Set","On");
                             vdata = new String(vdata).split("m3",1)[0];
@@ -365,20 +363,6 @@ function RefreshData()
                                     //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
                                 }
                                 break;
-                            case idx_Barometer:
-                                if (vdata > 100){ // Added > 100 because idx_Barometer is also used for weather prediction, idx=49
-                                    vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
-                                }
-                                break;
-                            case idx_Visibility:
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
-                                break;
-                            case idx_LuxF:
-                                vdata = new String(vdata).replace("Lux", "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
-                                break;
-                            case idx_WindSnelheid:
-                                vdata = new String(vdata).replace( " m/s","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>");
-                                break;
                             case idx_BewegingF:
                                 if(vdata == 'On,'){
                                     vdata = new String(vdata).replace(",", "");
@@ -397,18 +381,24 @@ function RefreshData()
                                 break;
                         }
 
-                        if (item.SubType == "Percentage") {
-                            vdata=new String(vdata).split("%",1)[0];
-                            vdata=Math.round(vdata);
+                        switch (item.SubType) {
+                            case "Percentage":
+                                vdata=new String(vdata).split("%",1)[0];
+                                vdata=Math.round(vdata);
 
-                            if(item.idx == idx_CPUmem && vdata > CPUmem_max){
-                                alarmcss=mem_max_color;							// Memory usage of the RPi is a bit high, font color will change
-                            }
-                            if(item.idx == idx_CPUusage && vdata > 50){			// CPU usage of the NAS is a bit high, font color will change, is not working with variable from frontpage_settings so hardcoded
-                                alarmcss=cpu_max_color;
-                            }
+                                if(item.idx == idx_CPUmem && vdata > CPUmem_max){
+                                    alarmcss=mem_max_color;							// Memory usage of the RPi is a bit high, font color will change
+                                }
+                                if(item.idx == idx_CPUusage && vdata > 50){			// CPU usage of the NAS is a bit high, font color will change, is not working with variable from frontpage_settings so hardcoded
+                                    alarmcss=cpu_max_color;
+                                }
 
-                            vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+
+                                break;
+                            case "Lux":
+                                vdata = new String(vdata).replace("Lux", "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
+                                break;
                         }
 
                         // set alarm icons night
@@ -462,6 +452,15 @@ function RefreshData()
                                 vdata = descArray[0];
                                 vdesc = descArray[1];
                                 break;
+                            case "Barometer":
+                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
+                                break;
+                            case "Speed":
+                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>";
+                                break;
+                            case "Visibility":
+                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
+                                break;
                             case "Temp":
                                 if (vdata < 0) {
                                     alarmcss = temp_freeze_color;
@@ -485,23 +484,8 @@ function RefreshData()
                                 vdata = new String(vdata).replace( " Watt","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> W</sup>");
                                 break;
                             case "CounterToday":
-                                vdata = new String(vdata).replace( " ","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>");
+                                vdata = new String(vdata).replace( " kWh","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>");
                                 break;
-                        }
-
-                        // Replace ON and OFF for the virtual switch 'IsDonker' by images
-                        if (item.idx == idx_SunState) {
-                            if (vdata == "Off") {
-                                vdata=new String(vdata).replace( "Off","<img src=icons/sunrise.png vspace=8>");		// day
-                                //vdesc=new String(vdesc).replace( "Zon onder","Zon op");					// replace text in desc
-                                //vdesc=desc_sunrise; //show text
-                                vdesc=desc_showsunboth; //show time sunrise and sunset
-                            } else if (vdata == "On") {
-                                vdata=new String(vdata).replace( "On","<img src=icons/sunset.png vspace=8>");		// night
-                                //vdesc=new String(vdesc).replace( "Zon op","Zon onder");					// replace text in desc
-                                //vdesc=desc_sunset; //show text
-                                vdesc=desc_showsunboth; //show time sunrise and sunset
-                            }
                         }
 
                         // create switchable value when item is switch
@@ -635,13 +619,18 @@ function RefreshData()
                             break;
 
                         case "SunBoth":
+                            // Replace ON and OFF for the virtual switch 'IsDonker' by images
+                            if (IsNight) {
+                                cellContent = "<img src=icons/sunset.png vspace=8>";		// night
+                            } else {
+                                cellContent = "<img src=icons/sunrise.png vspace=8>";		// day
+                            }
                             var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
                             var vdesc=      '';
                             var vattr=      $.PageArray[ii][6];         // extra css attributes
                             var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
-                            $('#' + vlabel).html('<div style=' + vattr + '>&#9650 ' + var_sunrise + ' | &#9660 ' + var_sunset + '</div>');
-                            $('#desc_' + vlabel).html(txt_sunboth);
-                            desc_showsunboth = '&#9650; ' + var_sunrise + ' | &#9660; ' + var_sunset; // used for cell with time sunrise and sunset including arrow up and arrow down
+                            $('#' + vlabel).html(cellContent);
+                            $('#desc_' + vlabel).html('&#9650; ' + var_sunrise + ' | &#9660; ' + var_sunset);
                             break;
                     };
                 }
