@@ -19,42 +19,12 @@ function lightbox_close(id)
 	$('#fade').fadeOut('fast');
 }
 	
-<!-- Check volume of Sonos -->
-function VolumeSonos(idx) {
-	return $.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=GetVolume",
-	    type: 'get',
-        dataType: 'html',
-        async: false
-    }).responseText
-}
-
-<!-- Check whats playing on Sonos - Radio -->
-function MediaInfoSonos(idx) {
-	return $.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=GetMediaInfo",
-	    type: 'get',
-        dataType: 'html',
-        async: false
-    }).responseText
-}
-
-<!-- Check whats playing on Sonos - Albums -->
-function PositionInfoSonos(idx) {
-	return $.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=GetPositionInfo",
-	    type: 'get',
-        dataType: 'html',
-        async: false
-    }).responseText
-}
-
 function stringpad (string, maxlength) {
     string = string.toString();
     return string.length < maxlength ? stringpad("0" + string, maxlength) : string;
 }
 
-<!-- Main Frontpage fuction -->
+<!-- Main Frontpage function -->
 function RefreshData()
 {
 	clearInterval($.refreshTimer);
@@ -308,36 +278,22 @@ function RefreshData()
 
                         //Blinds
                         if (item.SwitchType == 'Blinds') {
+                            var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+                            if(IsNight) {
+                                var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+                            }
+
                             if(vdata == 'Closed') {
-                                if(IsNight) {
-                                    var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
-                                else {
-                                    var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
                                 var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
                                 var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
                                 vdesc = vdesc + " | " + txt_zonon; //Change description text
                             }
                             if (vdata == 'Open') {
-                                if(IsNight) {
-                                    var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
-                                else {
-                                    var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
-                                //var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">'+ "||" +'</span>';
                                 var up = '<img src=icons/sun_up_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
                                 var down = '<img src=icons/sun_down_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
                                 vdesc = vdesc + " | " + txt_zonoff; //Change description text
                             }
                             if (vdata == 'Stopped') {
-                                if(IsNight) {
-                                    var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
-                                else {
-                                    var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                                }
                                 var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
                                 var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
                                 vdesc = vdesc + " | " + txt_zonstopped; //Change description text
@@ -462,35 +418,25 @@ function RefreshData()
                         }
 
                         // replace text when phone is at home
-                        if (item.idx == idx_Iphone5s && vdata == txt_on){
-                            vdata=new String(vdata).replace( txt_on, "Thuis");
-                        }
-                        if (item.idx == idx_Iphone5s && vdata == txt_off){
-                            vdata=new String(vdata).replace( txt_off, "Weg");
-                        }
-                        if (item.idx == idx_Telefoon_m && vdata == txt_on){
-                            vdata=new String(vdata).replace( txt_on, "Thuis");
-                        }
-                        if (item.idx == idx_Telefoon_m && vdata == txt_off){
-                            vdata=new String(vdata).replace( txt_off, "Weg");
-                        }
+                        switch (item.idx) {
+                            case idx_Iphone5s:
+                            case idx_Telefoon_m:
+                                if (vdata == txt_on) {
+                                    vdata = new String(vdata).replace(txt_on, "Thuis");
+                                } else {
+                                    vdata = new String(vdata).replace(txt_off, "Weg");
+                                }
+                                break;
 
-                        // replace closed / open to dutch
-                        if (item.idx == idx_Voordeur && vstatus == "Closed"){
-                            vdata = "Dicht";
-                        }
-                        if (item.idx == idx_Voordeur && vstatus == "Open"){
-                            vdata = "Open";
-                            alarmcss=color_off;
-                        }
-
-                        // replace closed / open to dutch
-                        if (item.idx == idx_Garagedeur && vstatus == "Closed"){
-                            vdata = "Dicht";
-                        }
-                        if (item.idx == idx_Garagedeur && vstatus == "Open"){
-                            vdata = "Open";
-                            alarmcss=color_off;
+                            case idx_Voordeur:
+                            case idx_Garagedeur:
+                                if (vstatus == "Closed") {
+                                    vdata = "Dicht";
+                                } else {
+                                    vdata = "Open";
+                                    alarmcss = color_off;
+                                }
+                                break;
                         }
 
                         if (item.SubType == "Percentage") {
@@ -769,122 +715,77 @@ function RefreshData()
     $.refreshTimer = setInterval(RefreshData, 8000); //was 8000
 }
 
+function DomoticzAction(idx, param, switchcmd, level)
+{
+    var url = $.domoticzurl+"/json.htm?type=command&param=" + param + "&idx=" + idx + "&switchcmd=" + switchcmd;
+    if (level != null) {
+        url += "&level=" + level;
+    }
+    $.ajax({
+        url: url,
+        async: false,
+        dataType: 'json',
+        success: function() {
+            console.log('Domoticz action ' + switchcmd + " on idx " + idx + " succesfull");
+        },
+        error: function() {
+            console.log('ERROR in: Domoticz action ' + switchcmd + " on idx " + idx + " succesfull");
+        }
+    });
+    RefreshData();
+}
+
 //Switch state off a scene/group
 function SceneToggle(idx, switchcmd)
 {
-    $.ajax({
-    	url: $.domoticzurl+"/json.htm?type=command&param=switchscene" + "&idx=" + idx + "&switchcmd=" + switchcmd,
-	    async: false,
-    	dataType: 'json',
-	    success: function() {
-	        console.log('SUCCES');
-    	},
-	    error: function() {
-	        console.log('ERROR');
-    	}
-	});
-	RefreshData();
+    DomoticzAction(idx, "switchscene", switchcmd, null);
 }
 
 //switch state of a switch
 function SwitchToggle(idx, switchcmd)
 {
-	$.ajax({
-        url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=" + switchcmd,
-        async: false,
-        dataType: 'json',
-        success: function() {
-            console.log('SUCCES');
-        },
-        error: function() {
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
+    DomoticzAction(idx, "switchlight", switchcmd, null);
 }
 	
 //switch dimmer and set level
 function SwitchDimmer(idx, level)
 {
-	$.ajax({
-        url: $.domoticzurl+"/json.htm?type=command&param=switchlight" + "&idx=" + idx + "&switchcmd=Set%20Level" + "&level=" + level,
-        async: false,
-        dataType: 'json',
-        success: function() {
-            console.log('SUCCES');
-        },
-        error: function() {
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
+    DomoticzAction(idx, "switchlight", "Set%20Level", level);
 }
 
 //Dimmer, only works with 1-16 dimmer for now
-function ChangeStatus(OpenDicht,level,idx,currentlevel)
+function ChangeStatus(OpenDicht, level, idx, currentlevel)
 {
 	//When switched off return to previous level, no matter if plus or min pressed
 	if (level == txt_off) {
 		if (currentlevel == 1) {
 			currentlevel++;
 		}
-		//console.log("In uit",currentlevel);
-		$.ajax({
-		url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + currentlevel,
-		async: false,
-		dataType: 'json',
-		success: function(){
-		console.log('SUCCES');
-		},
-		error: function(){
-		console.log('ERROR');
-		}
-		});
+        DomoticzAction(idx, "switchlight", "Set%20Level", currentlevel);
 	} else {
 		level = level * 1;
 		//console.log(OpenDicht,level);
 		if (OpenDicht == "plus")
-			{
-			var d = ((level + 10)/100 * 16) +  0.5;
+        {
+			var d = ((level + 10) / 100 * 16) + 0.5;
 			//console.log("in plus",d,level);
 			if(d > 16) {
 				d = 16;
 			}
-			$.ajax({
-                url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-                async: false,
-                dataType: 'json',
-                success: function(){
-                    console.log('SUCCES');
-                },
-                error: function(){
-			        console.log('ERROR');
-			    }
-			});
+            DomoticzAction(idx, "switchlight", "Set%20Level", d);
 		} else {
-			var d = ((level-0.1 )/100*16)  ;
+			var d = ((level - 0.1) / 100 * 16);
 			//console.log("in min",d,level);
 			if( d < 0 ) {
 				d = 0;
 			}
-			$.ajax({
-                url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-                async: false,
-                dataType: 'json',
-                success: function(){
-                    console.log('SUCCES');
-                },
-                error: function(){
-                    console.log('ERROR');
-                }
-			});
+            DomoticzAction(idx, "switchlight", "Set%20Level", d);
 		}
 	}
-	RefreshData();
 }
 
 // zwave dimmer
-function ZWaveDim(OpenDicht,level,idx)
+function ZWaveDim(OpenDicht, level, idx)
 {
     if (OpenDicht == "plus") {
         //var d = 0;
@@ -892,117 +793,38 @@ function ZWaveDim(OpenDicht,level,idx)
         if(d > 100) {
             d = 100;
         }
-        $.ajax({
-            url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-            async: false,
-            dataType: 'json',
-            success: function(){
-                console.log('SUCCES');
-                //console.log('level oud: ' + level);
-                //console.log('level nieuw: ' + d);
-                //console.log('idx: ' + idx);
-                z_dimmer = d; //To show new value for ZWave dimmer
-                z_whichdimmer = idx; //Only show new value for dimmer which was pressed
-                //console.log('waarde: ' + z_dimmer);
-                //console.log('idx: ' + z_whichdimmer);
-            },
-            error: function(){
-                console.log('ERROR');
-            }
-        });
+        DomoticzAction(idx, "switchlight", "Set%20Level", d);
+        z_dimmer = d; //To show new value for ZWave dimmer
+        z_whichdimmer = idx; //Only show new value for dimmer which was pressed
     } else {
-        //var d = 0;
         var d = level - 10;
         //console.log("in min",d,level);
         if( d < 0 ){
             d = 0;
         }
-        $.ajax({
-            url: $.domoticzurl+"/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-            async: false,
-            dataType: 'json',
-            success: function(){
-                console.log('SUCCES');
-                //console.log('level oud: ' + level);
-                //console.log('level nieuw: ' + d);
-                //console.log('idx: ' + idx);
-                z_dimmer = d; //To show new value for ZWave dimmer
-                z_whichdimmer = idx; //Only show new value for dimmer which was pressed
-                //console.log('waarde: ' + z_dimmer);
-                //console.log('idx: ' + z_whichdimmer);
-            },
-            error: function(){
-                console.log('ERROR');
-            }
-        });
+        DomoticzAction(idx, "switchlight", "Set%20Level", d);
+        z_dimmer = d; //To show new value for ZWave dimmer
+        z_whichdimmer = idx; //Only show new value for dimmer which was pressed
     }
-//sleep(3000);        
-RefreshData();
 }
 	
 // blinds percentage
 function BlindChangeStatus(OpenDicht,level,idx)
 {
     if (OpenDicht == "plus") {
-        //var d = 0;
         var d = level + 10;
         if(d > 100) {
             d = 100;
         }
-        $.ajax({
-            url: $.domoticzurl + "/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-            async: false,
-            dataType: 'json',
-            success: function(){
-                console.log('SUCCES');
-                //console.log('level oud: ' + level);
-                //console.log('level nieuw: ' + d);
-                //console.log('idx: ' + idx);
-                //o_dimmer = d; //To show new value for dimmer
-                //o_whichdimmer = idx; //Only show new value for dimmer which was pressed
-                //console.log('waarde: ' + o_dimmer);
-                //console.log('idx: ' + o_whichdimmer);
-            },
-            error: function(){
-                console.log('ERROR');
-            }
-        });
+        DomoticzAction(idx, "switchlight", "Set%20Level", d);
     } else {
         var d = level - 10;
         //console.log("in min",d,level);
         if( d < 0 ) {
             d = 0;
         }
-        $.ajax({
-            url: $.domoticzurl + "/json.htm?type=command&param=switchlight&idx=" + idx + "&switchcmd=Set Level&level=" + d,
-            async: false,
-            dataType: 'json',
-            success: function(){
-                console.log('SUCCES');
-                //console.log('level oud: ' + level);
-                //console.log('level nieuw: ' + d);
-                //console.log('idx: ' + idx);
-                //o_dimmer = d; //To show new value for ZWave dimmer
-                //o_whichdimmer = idx; //Only show new value for dimmer which was pressed
-                //console.log('waarde: ' + o_dimmer);
-                //console.log('idx: ' + o_whichdimmer);
-            },
-            error: function(){
-                console.log('ERROR');
-            }
-        });
+        DomoticzAction(idx, "switchlight", "Set%20Level", d);
     }
-    //sleep(3000);
-    RefreshData();
-}
-
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
 }
 
 //Thermostat
@@ -1025,7 +847,7 @@ function ChangeTherm(dimtype, stepsize, idx, currentvalue, thermmax)
         }
     }
     $.ajax({
-        url: $.domoticzurl+"/json.htm?type=command&param=udevice" + "&idx=" + idx + "&nvalue=0&svalue=" + newvalue,
+        url: $.domoticzurl + "/json.htm?type=command&param=udevice" + "&idx=" + idx + "&nvalue=0&svalue=" + newvalue,
         async: false,
         dataType: 'json',
         success: function(){
@@ -1037,109 +859,80 @@ function ChangeTherm(dimtype, stepsize, idx, currentvalue, thermmax)
     });
  	RefreshData();
 }
-	
-	
-//Volume up of Sonos
-function ChangeVolumeUp(idx)
+
+function getSonosInfo(action, idx)
 {
-	$.ajax({
-	    url: "sonos/index.php?zone=" + idx + "&action=VolumeUp",
+    return $.ajax({
+        url: "sonos/index.php?zone=" + idx + "&action=" + action,
+        type: 'get',
+        dataType: 'html',
+        async: false
+    }).responseText
+}
+
+<!-- Check volume of Sonos -->
+function VolumeSonos(idx) {
+    return getSonosInfo("GetVolume", idx);
+}
+
+<!-- Check whats playing on Sonos - Radio -->
+function MediaInfoSonos(idx) {
+    return getSonosInfo("GetMediaInfo", idx);
+}
+
+<!-- Check whats playing on Sonos - Albums -->
+function PositionInfoSonos(idx) {
+    return getSonosInfo("GetPositionInfo", idx);
+}
+
+function SetSonos(action, idx)
+{
+    $.ajax({
+        url: "sonos/index.php?zone=" + idx + "&action=" + action,
         async: true,
         dataType: 'html', //was json but that always gave an error although it's working
         success: function(){
-            console.log('Volume up');
+            console.log(action + " on idx " + idx + " succesfull");
         },
         error: function(){
-            console.log('ERROR');
+            console.log(action + " on idx " + idx + " ERROR");
         }
-	});
-	RefreshData();
+    });
+    RefreshData();
 }
 
-//Volume down of Sonos
+function ChangeVolumeUp(idx)
+{
+    SetSonos("VolumeUp", idx);
+}
+
 function ChangeVolumeDown(idx)
 {
-	$.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=VolumeDown",
-        async: true,
-        dataType: 'html',
-        success: function(){
-            console.log('Volume down');
-        },
-        error: function(){
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
+    SetSonos("VolumeDown", idx);
 }
 	
 //Change radio of Sonos
 function ChangeRadio(idx)
 {
-	$.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=NextRadio",
-        async: true,
-        dataType: 'html',
-        success: function(){
-            console.log('Next radio station');
-        },
-        error: function(){
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
-	}
+    SetSonos("NextRadio", idx);
+}
 	
 //Change radio of Sonos
 function ChangeRadioPrev(idx)
 {
-	$.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=PrevRadio",
-        async: true,
-        dataType: 'html',
-        success: function(){
-            console.log('Previous radio station');
-        },
-        error: function(){
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
-	}
+    SetSonos("PrevRadio", idx);
+}
 	
 //Next song of Sonos
 function ChangeNextSong(idx)
 {
-	$.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=Next",
-        async: true,
-        dataType: 'html',
-        success: function(){
-            console.log('Next radio station');
-        },
-        error: function(){
-            console.log('ERROR');
-        //console.log('idx: ' + idx);
-        }
-	});
-	RefreshData();
+    SetSonos("Next", idx);
 }
 	
 //Previous song of Sonos
 function ChangePreviousSong(idx)
 {
-	$.ajax({
-        url: "sonos/index.php?zone=" + idx + "&action=Previous",
-        async: true,
-        dataType: 'html',
-        success: function(){
-            console.log('Next radio station');
-        },
-        error: function(){
-            console.log('ERROR');
-        }
-	});
-	RefreshData();
+    SetSonos("Previous", idx);
 }
 
 //Return current time: dd-mm-yyyy hh:mm
