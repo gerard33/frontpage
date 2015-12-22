@@ -2,23 +2,23 @@
 <!-- Create popup -->
 function lightbox_open(id, timeout, txt)
 {
-	window.scrollTo(0, 0);
-	if (typeof txt != 'undefined') {
-		$('#popup_' + id).html('<div>'+txt+'</div>');
+    window.scrollTo(0, 0);
+    if (typeof txt != 'undefined') {
+        $('#popup_' + id).html('<div>' + txt + '</div>');
     }
-	$('#popup_' + id).fadeIn('fast');
-	$('#fade').fadeIn('fast');
-	return setTimeout(function() {
-	    lightbox_close(id);
-	}, timeout);
+    $('#popup_' + id).fadeIn('fast');
+    $('#fade').fadeIn('fast');
+    return setTimeout(function() {
+        lightbox_close(id);
+    }, timeout);
 }
 <!-- Close popup -->
 function lightbox_close(id)
 {
-	$('#popup_' + id).fadeOut('fast');
-	$('#fade').fadeOut('fast');
+    $('#popup_' + id).fadeOut('fast');
+    $('#fade').fadeOut('fast');
 }
-	
+
 function stringpad (string, maxlength) {
     string = string.toString();
     return string.length < maxlength ? stringpad("0" + string, maxlength) : string;
@@ -27,14 +27,14 @@ function stringpad (string, maxlength) {
 <!-- Main Frontpage function -->
 function RefreshData()
 {
-	clearInterval($.refreshTimer);
-	
-	var jurl = $.domoticzurl + "/json.htm?type=devices&plan=" + $.roomplan + "&jsoncallback=?";
-	$.getJSON(jurl,
-	{
-		format: "json"
-	},
-	function(data) {
+    clearInterval($.refreshTimer);
+
+    var jurl = $.domoticzurl + "/json.htm?type=devices&plan=" + $.roomplan + "&jsoncallback=?";
+    $.getJSON(jurl,
+    {
+       format: "json"
+    },
+    function(data) {
         if (typeof data.Sunrise != 'undefined') {
             var_sunrise = data.Sunrise.substring(0, 5);
         }
@@ -44,28 +44,28 @@ function RefreshData()
         var today = new Date();
         var theCurrentTime = stringpad(today.getHours(), 2) + ":" + stringpad(today.getMinutes(), 2);
         if (theCurrentTime > var_sunrise && theCurrentTime < var_sunset) {
-            document.getElementById('dark-styles').disabled  = true;				// day
+            document.getElementById('dark-styles').disabled  = true;
             IsNight = false;
         } else {
-            document.getElementById('dark-styles').disabled  = false;				// night
+            document.getElementById('dark-styles').disabled  = false;
             IsNight = true;
         }
-	    if (typeof data.result != 'undefined') {
 
-            $.each(data.result, function(i,item){
-                for( var ii = 0, len = $.PageArray.length; ii < len; ii++ ) {
-                    if( $.PageArray[ii][0] === item.idx ) {	// Domoticz idx number
-                        var vtype = $.PageArray[ii][1];		// Domoticz type (like Temp, Humidity)
-                        var vlabel = $.PageArray[ii][2];	// cell number from HTML layout
-                        var vdesc = $.PageArray[ii][3];		// description
-                        var lastseen = $.PageArray[ii][4];	// Display lastseen or not
-                        var vplusmin = $.PageArray[ii][5];	// minplus buttons
-                        var vattr = $.PageArray[ii][6];		// extra css attributes
-                        var valarm = $.PageArray[ii][7];	// alarm value to turn text to red
-                        var vdata = item[vtype];			// current value
-                        var vstatus = item["Status"];		// current status
-                        var vls = item["LastUpdate"];		// Last Seen
-
+        if (typeof data.result != 'undefined') {
+            $.each(data.result, function(i, item) {
+                for (var ii = 0, len = $.PageArray.length; ii < len; ii++) {
+                    if ($.PageArray[ii][0] === item.idx) {      // Domoticz idx number
+                        var vtype = $.PageArray[ii][1];         // Domoticz type (like Temp, Humidity)
+                        var vlabel = $.PageArray[ii][2];        // cell number from HTML layout
+                        var vdesc = $.PageArray[ii][3];         // description
+                        var lastseen = $.PageArray[ii][4];      // Display lastseen or not
+                        var vplusmin = $.PageArray[ii][5];      // minplus buttons
+                        var vattr = $.PageArray[ii][6] || '';   // extra css attributes
+                        var valarm = $.PageArray[ii][7];        // alarm value to turn text to red
+                        var vdata = item[vtype];                // current value
+                        var vstatus = item["Status"];           // current status
+                        var vls = item["LastUpdate"];           // Last Seen
+                        var vdataSuffix = '';                   // The extra info after the raw value (%, W, kWh, Lux...)
                         var lastSeenArray = getLastSeen(item["LastUpdate"]);
 
                         //Added by GZ used for last seen to only show day if <> today
@@ -81,39 +81,30 @@ function RefreshData()
                             vdata = new String(vdata).split(" Level:",1)[0];
                             vdata = new String(vdata).replace("Set","On");
                             vdata = new String(vdata).split("m3",1)[0];
-                            //vdata=new String(vdata).split("C",1)[0];
                             vdata = new String(vdata).replace("true","protected");
                             //Added by GZ to only show date if <> today, see below
                             vdate = new String(vls).split(" ",2)[0];
                         }
 
                         alarmcss='';
-                        //Push On gives wrong(undesired) status
-                        if (item.SwitchType == 'Push On Button') {
-                            vdata = 'Off'
-                        }
 
                         //Check whether we want to add the last seen to the block
                         if (lastseen == '1') {
                             if (thisday == vdate) {
-                                $('#ls_' + vlabel).html(lastSeenArray["time"]) 						// Show only the time if last change date = today
-                            }
-                            else {
-                                $('#ls_' + vlabel).html(lastSeenArray["time"] + ' | ' + lastSeenArray["date"])	// Change this 'Last Seen' into something you like
+                                $('#ls_' + vlabel).html(lastSeenArray["time"]);                                 // Show only the time if last change date = today
+                            } else {
+                                $('#ls_' + vlabel).html(lastSeenArray["time"] + ' | ' + lastSeenArray["date"]); // Change this 'Last Seen' into something you like
                             }
                         } else if (lastseen == '2') {
-                            $('#ls_' + vlabel).html(lastSeenArray["time"])							// Show only the time
+                            $('#ls_' + vlabel).html(lastSeenArray["time"]);// Show only the time
                         }
 
                         //switch layout cell
-                        if (vplusmin > 0) {	//layout cell, percentage font-size was 80%
+                        if (vplusmin > 0) { //layout cell, percentage font-size was 80%
                             if (vstatus == 'Off') {
-                                //alarmcss=';color:#E24E2A;font-size:100%;vertical-align:top;';	// text color dimmer percentage when OFF
                                 alarmcss = color_off;
                                 vdata = txt_off; //show text from frontpage_settings
-                            }
-                            else {
-                                //alarmcss=';color:#1B9772;font-size:100%;vertical-align:top;';	// text color dimmer percentage when ON
+                            } else {
                                 alarmcss = color_on;
                                 vdata = txt_on;	//show text from frontpage_settings
                             }
@@ -250,90 +241,110 @@ function RefreshData()
                             //console.log(vdata);
                         }
 
-                        //Blinds
-                        if (item.SwitchType == 'Blinds') {
-                            var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                            if(IsNight) {
-                                var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
-                            }
+                        switch (item.SwitchType) {
+                            //Push On gives wrong(undesired) status
+                            case "Push On Button":
+                                vdata = 'Off'
+                            case "On/Off":
+                                switchclick='';
+                                if (vdata == 'Off') {
+                                    switchclick = 'onclick="SwitchToggle('+ item.idx +', \'On\');lightbox_open(\'switch\', ' + switch_on_timeout + ', ' + txt_switch_on + ')"';
+                                    alarmcss = color_off;
+                                    vdata = txt_off;
+                                } else if (vdata == 'On') {
+                                    switchclick = 'onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', ' + switch_off_timeout + ', ' + txt_switch_off + ')"';
+                                    alarmcss = color_on;
+                                    vdata = txt_on;
+                                }
+                                if (item.Protected == true || vplusmin == 4) {
+                                    vdesc = vdesc + desc_protected;
+                                    switchclick = 'onClick="lightbox_open(\'protected\', ' + switch_protected_timeout + ', ' + txt_switch_protected + ');"';
+                                }
+                                break;
 
-                            if(vdata == 'Closed') {
-                                var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                vdesc = vdesc + " | " + txt_zonon; //Change description text
-                            }
-                            if (vdata == 'Open') {
-                                var up = '<img src=icons/sun_up_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                var down = '<img src=icons/sun_down_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                vdesc = vdesc + " | " + txt_zonoff; //Change description text
-                            }
-                            if (vdata == 'Stopped') {
-                                var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                vdesc = vdesc + " | " + txt_zonstopped; //Change description text
-                            }
-                            vdata = down.concat(hlp,up);
-                            //console.log(vdata);
-                        }
-                        if (item.SwitchType == 'Blinds Inverted') {
-                            if(vdata == 'Closed') {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                            }
-                            if (vdata == 'Open') {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                            }
-                            vdata = down.concat(up);
-                            //console.log(vdata);
-                        }
-                        if (item.SwitchType == 'Blinds Percentage') {
-                            if(item.Status == 'Closed') {
-                                vdata = 100;
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                            }
-                            else if (item.Status == 'Open') {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                            }
-                            else {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                            }
-                            vdesc=new String(vdesc).replace( vdesc,vdesc + "<span style='color:#1B9772;font-size:20px;'> "+(100-vdata)+"&#37;</span>");
-                            vdata = min.concat(down,up,plus);
-                            //console.log(vdata);
-                        }
-                        if (item.SwitchType == 'Blinds Percentage Inverted') {
-                            if(item.Status == 'Closed') {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                            }
-                            else if (item.Status == 'Open') {
-                                vdata = 100;
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                            }
-                            else {
-                                var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                            }
-                            vdesc=new String(vdesc).replace( vdesc,vdesc + "<span style='color:#1B9772;font-size:20px;'> "+vdata+"&#37;</span>");
-                            vdata = min.concat(down,up,plus);
-                            //console.log(vdata);
+                            case "Blinds":
+                                var hlp = '<img src=icons/sun_stop_d.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+                                if(IsNight) {
+                                    var hlp = '<img src=icons/sun_stop_n.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Stop\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_stop+')">';
+                                }
+
+                                if(vdata == 'Closed') {
+                                    var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    vdesc = vdesc + " | " + txt_zonon; //Change description text
+                                }
+                                if (vdata == 'Open') {
+                                    var up = '<img src=icons/sun_up_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    var down = '<img src=icons/sun_down_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    vdesc = vdesc + " | " + txt_zonoff; //Change description text
+                                }
+                                if (vdata == 'Stopped') {
+                                    var up = '<img src=icons/sun_up_off.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    var down = '<img src=icons/sun_down_on.png hspace=15 vspace=10 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    vdesc = vdesc + " | " + txt_zonstopped; //Change description text
+                                }
+                                vdata = down.concat(hlp, up);
+                                break;
+
+                            case "Blinds Inverted":
+                                if(vdata == 'Closed') {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
+                                }
+                                if (vdata == 'Open') {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
+                                }
+                                vdata = down.concat(up);
+                                break;
+
+                            case "Blinds Percentage":
+                                if(item.Status == 'Closed') {
+                                    vdata = 100;
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                }
+                                else if (item.Status == 'Open') {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                }
+                                else {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                }
+                                vdesc = new String(vdesc).replace(vdesc, vdesc + "<span style='color:#1B9772;font-size:20px;'> " + (100-vdata) + "&#37;</span>");
+                                vdata = min.concat(down, up, plus);
+                                break;
+
+                            case "Blinds Percentage Inverted":
+                                if(item.Status == 'Closed') {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                }
+                                else if (item.Status == 'Open') {
+                                    vdata = 100;
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                }
+                                else {
+                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
+                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
+                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
+                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                }
+                                vdesc = new String(vdesc).replace(vdesc, vdesc + "<span style='color:#1B9772;font-size:20px;'> " + vdata + "&#37;</span>");
+                                vdata = min.concat(down,up,plus);
+                                break;
                         }
 
                         switch (item.idx) {
@@ -379,29 +390,34 @@ function RefreshData()
                                     alarmcss = color_off;
                                 }
                                 break;
+
+                            case idx_ZonV:
+                            case idx_ZonA:
+                                //change text of blinds, placed after switch code above, otherwise is is not clickable
+                                if (vdata == txt_on){ //txt_on from frontpage settings
+                                    vdata = txt_zonon;
+                                    alarmcss = color_on;
+                                } else if (vdata == txt_off){ //txt_off from frontpage settings
+                                    vdata = txt_zonoff;
+                                    alarmcss=color_off;
+                                }
+                                break;
                         }
 
                         switch (item.SubType) {
                             case "Percentage":
-                                vdata=new String(vdata).split("%",1)[0];
-                                vdata=Math.round(vdata);
-
-                                if(item.idx == idx_CPUmem && vdata > CPUmem_max){
-                                    alarmcss=mem_max_color;							// Memory usage of the RPi is a bit high, font color will change
-                                }
-                                if(item.idx == idx_CPUusage && vdata > 50){			// CPU usage of the NAS is a bit high, font color will change, is not working with variable from frontpage_settings so hardcoded
-                                    alarmcss=cpu_max_color;
-                                }
-
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+                                vdata = new String(vdata).split("%",1)[0];
+                                vdata = Math.round(vdata);
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
 
                                 break;
                             case "Lux":
-                                vdata = new String(vdata).replace("Lux", "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>");
+                                vdata = new String(vdata).replace("Lux", "");
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>";
                                 break;
                         }
 
-                        // set alarm icons night
+                        // set alarm icons
                         if (item.idx == idx_Alarm) {
                             switch (vdata) {
                                 case "Arm Away":
@@ -440,7 +456,7 @@ function RefreshData()
                             case "SetPoint":
                                 //Thermostat
                                 if (vplusmin > 0) {
-                                    var hlp = '<span style='+vattr+'>'+ vdata+'</span>';
+                                    var hlp = '<span style=' + vattr + '>' + vdata + '</span>';
                                     var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=ChangeTherm('plus'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
                                     var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=ChangeTherm('min'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
                                     vdata = min.concat(hlp,plus);
@@ -453,167 +469,114 @@ function RefreshData()
                                 vdesc = descArray[1];
                                 break;
                             case "Barometer":
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
                                 break;
                             case "Speed":
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>";
                                 break;
                             case "Visibility":
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
                                 break;
                             case "Temp":
                                 if (vdata < 0) {
                                     alarmcss = temp_freeze_color;
                                 }
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>";
                                 break;
                             case "Humidity":
                                 if(vdata > humidity_max){	// It's humid, font color will change
                                     alarmcss = humidity_max_color;
                                 }
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
                                 break;
                             case "Rain":
-                                vdata += "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> mm</sup>";
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> mm</sup>";
                                 break;
                             case "DirectionStr":
                                 // Replace S from South to Z from Zuiden, E to O using regex
                                 vdata = new String(vdata).replace(/E/gi, "O").replace( /S/gi, "Z");
                                 break;
                             case "Usage":
-                                vdata = new String(vdata).replace( " Watt","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> W</sup>");
+                                vdata = new String(vdata).replace( " Watt","");
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> W</sup>";
                                 break;
                             case "CounterToday":
-                                vdata = new String(vdata).replace( " kWh","<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>");
+                                vdata = new String(vdata).replace( " kWh","");
+                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>";
                                 break;
                         }
-
-                        // create switchable value when item is switch
-                        switchclick='';
-                        if (vdata == 'Off' && vplusmin != 4) {
-                            switchclick = 'onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"';
-                            alarmcss = color_off;
-                            vdata = txt_off;
-                        }
-                        if (vdata == 'On' && vplusmin != 4) {
-                            switchclick = 'onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"';
-                            alarmcss = color_on;
-                            vdata = txt_on;
-                        }
-
-                        //change text of blinds, placed after switch code above, otherwise is is not clickable
-                        if (item.idx == idx_ZonV && vdata == txt_on){ //txt_on from frontpage settings
-                        //	vdata=new String(vdata).replace( "On", "Dicht");
-                            vdata=txt_zonon;
-                            alarmcss=color_on;
-                        }
-                        if (item.idx == idx_ZonV && vdata == txt_off){ //txt_off from frontpage settings
-                        //	vdata=new String(vdata).replace( "Off", "Open");
-                            vdata=txt_zonoff;
-                            alarmcss=color_off;
-                        }
-                        //if (item.idx == idx_ZonV && vdata == 'Stopped'){
-                        //	vdata=new String(vdata).replace( "Stopped", "Gestopt");
-                        //	alarmcss=color_off;
-                        //}
-
-                        //change text of blinds
-                        if (item.idx == idx_ZonA && vdata == txt_on){
-                        //	vdata=new String(vdata).replace( "On", "Dicht");
-                            vdata=txt_zonon;
-                            alarmcss=color_on;
-                        }
-                        if (item.idx == idx_ZonA && vdata == txt_off){
-                        //	vdata=new String(vdata).replace( "Off", "Open");
-                            vdata=txt_zonoff;
-                            alarmcss=color_off;
-                        }
-                        //if (item.idx == idx_ZonA && vdata == 'Stopped'){
-                        //	vdata=new String(vdata).replace( "Stopped", "Gestopt");
-                        //	alarmcss=color_off;
-                        //}
 
                         // if alarm threshold is defined, make value red
                         if (typeof valarm != 'undefined') {
-                            alarmcss='';
-                            if ( eval(vdata + valarm)) {  // note orig:  vdata > alarm
-                                alarmcss=';color:red;';
+                            alarmcss = '';
+                            if (vdata > valarm) {
+                                alarmcss = ';color:red;';
                             }
                         }
 
                         if (vdata == txt_off && vplusmin == 6) { //protect switch when on for vplusmin is 6
-                            switchclick = 'onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"';
-                            alarmcss= color_off;
+                            switchclick = 'onclick="SwitchToggle(' + item.idx + ', \'On\');lightbox_open(\'switch\', ' + switch_on_timeout + ', ' + txt_switch_on + ')"';
+                            alarmcss = color_off;
                             //vdata = txt_off;
                         }
                         if (vdata == txt_on && vplusmin == 6) { //protect switch when on for vplusmin is 6
-                            switchclick = 'onclick="lightbox_open(\'protected\', '+switch_protected_timeout+', '+txt_switch_protected+')"';
+                            switchclick = 'onclick="lightbox_open(\'protected\', ' + switch_protected_timeout + ', ' + txt_switch_protected + ')"';
                             vdesc = vdesc + desc_protected;
                             //alarmcss= color_on;
                             //vdata = txt_on;
                         }
 
-                        // if extra css attributes. Make switch not switchable when it is protected, just give message
-                        if (typeof vattr == 'undefined') {
-                            vattr = '';
-                        }
-                        if (item.Protected == true || vplusmin == 4) {
-                            //vdesc = "<img scr=icons/lock-closed_w.png align='left'>" + vdesc;
-                            vdesc = vdesc + desc_protected;
-                            $('#'+vlabel).html( '<div onClick="lightbox_open(\'protected\', '+switch_protected_timeout+ ', '+txt_switch_protected+');" style='+vattr+alarmcss+'>'+vdata+'</div>');
-                        } else {
-                            $('#'+vlabel).html( '<div '+switchclick+' style='+vattr+alarmcss+'>'+vdata+'</div>');
-                        }
-                        $('#desc_'+vlabel).html(vdesc);
+                        $('#' + vlabel).html( '<div ' + switchclick + ' style="' + vattr + ';' + alarmcss + '">' + vdata + vdataSuffix + '</div>');
+                        $('#desc_' + vlabel).html(vdesc);
                     }
 
                     switch ($.PageArray[ii][1]) {
                         case "Link":
-                            //var vtype=    $.PageArray[ii][1];		// Domoticz type (like Temp, Humidity)
-                            var vlabel=     $.PageArray[ii][2];		// cell number from HTML layout
-                            var vdata=      $.PageArray[ii][3];		// description (link in this case
+                            //var vtype=    $.PageArray[ii][1];     // Domoticz type (like Temp, Humidity)
+                            var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
+                            var vdata=      $.PageArray[ii][3];     // description (link in this case
                             var vdesc = 	'';
-                            //var vattr=    $.PageArray[ii][6];		// extra css attributes
-                            var valarm=     $.PageArray[ii][7];		// alarm value to turn text to red
-                            //var vdata=    item[vtype];			// current value
+                            //var vattr=    $.PageArray[ii][6];     // extra css attributes
+                            var valarm=     $.PageArray[ii][7];     // alarm value to turn text to red
+                            //var vdata=    item[vtype];            // current value
                             $('#' + vlabel).html('<div>' + vdata + '</div>');
                             $('#desc_' + vlabel).html(vdesc);
                             break;
                         case "Tijd": //Special nummer, tijd in cell (test)
-                            //var vtype=    $.PageArray[ii][1];		// Domoticz type (like Temp, Humidity)
-                            var vlabel=     $.PageArray[ii][2];		// cell number from HTML layout
-                            var vdata=      currentTime();			// Get present time
-                            var vdesc = 	'';
-                            var vattr=    	$.PageArray[ii][5];		// extra css attributes
-                            var valarm=     $.PageArray[ii][6];		// alarm value to turn text to red
-                            //var vdata=    item[vtype];			// current value
+                            //var vtype =   $.PageArray[ii][1];     // Domoticz type (like Temp, Humidity)
+                            var vlabel =    $.PageArray[ii][2];     // cell number from HTML layout
+                            var vdata =     currentTime();          // Get present time
+                            var vdesc =     '';
+                            var vattr =     $.PageArray[ii][5];     // extra css attributes
+                            var valarm =    $.PageArray[ii][6];     // alarm value to turn text to red
+                            //var vdata =   item[vtype];            // current value
                             $('#' + vlabel).html('<div style=' + vattr + '>' + vdata + '</div>');
                             $('#desc_' + vlabel).html(vdesc);
                             break;
 
                         case "Desc":
-                            var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
-                            var vdesc=      $.PageArray[ii][3];		// show text in bottom
-                            var lastseen=	$.PageArray[ii][4];		// show last seen
-                            var vls= 	    item["LastUpdate"];			// Last Seen
+                            var vlabel =    $.PageArray[ii][2];     // cell number from HTML layout
+                            var vdesc =     $.PageArray[ii][3];     // show text in bottom
+                            var lastseen =  $.PageArray[ii][4];     // show last seen
+                            var vls =       item["LastUpdate"];     // Last Seen
                             //$('#'+vlabel).html( '<div style='+vattr+'>'+vdata+'</div>');
                             $('#desc_' + vlabel).html(vdesc);
                             break;
 
                         case "SunRise":
-                            var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
-                            var vdesc=      '';
-                            var vattr=      $.PageArray[ii][6];        	// extra css attributes
-                            var valarm=     $.PageArray[ii][7];        	// alarm value to turn text to red
+                            var vlabel =    $.PageArray[ii][2];         // cell number from HTML layout
+                            var vdesc =     '';
+                            var vattr =     $.PageArray[ii][6];         // extra css attributes
+                            var valarm =    $.PageArray[ii][7];         // alarm value to turn text to red
                             $('#' + vlabel).html('<div style=' + vattr + '>' + var_sunrise + '</div>');
                             $('#desc_' + vlabel).html(txt_sunrise);
                             break;
 
                         case "SunSet":
-                            var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
-                            var vdesc=      '';
-                            var vattr=      $.PageArray[ii][6];         // extra css attributes
-                            var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
+                            var vlabel =    $.PageArray[ii][2];         // cell number from HTML layout
+                            var vdesc =     '';
+                            var vattr =     $.PageArray[ii][6];         // extra css attributes
+                            var valarm =    $.PageArray[ii][7];         // alarm value to turn text to red
                             $('#' + vlabel).html('<div style=' + vattr + '>' + var_sunset + '</div>');
                             $('#desc_' + vlabel).html(txt_sunset);
                             break;
@@ -621,23 +584,23 @@ function RefreshData()
                         case "SunBoth":
                             // Replace ON and OFF for the virtual switch 'IsDonker' by images
                             if (IsNight) {
-                                cellContent = "<img src=icons/sunset.png vspace=8>";		// night
+                                cellContent = "<img src=icons/sunset.png vspace=8>";
                             } else {
-                                cellContent = "<img src=icons/sunrise.png vspace=8>";		// day
+                                cellContent = "<img src=icons/sunrise.png vspace=8>";
                             }
-                            var vlabel=     $.PageArray[ii][2];         // cell number from HTML layout
-                            var vdesc=      '';
-                            var vattr=      $.PageArray[ii][6];         // extra css attributes
-                            var valarm=     $.PageArray[ii][7];         // alarm value to turn text to red
+                            var vlabel =    $.PageArray[ii][2];         // cell number from HTML layout
+                            var vdesc =     '';
+                            var vattr =     $.PageArray[ii][6];         // extra css attributes
+                            var valarm =    $.PageArray[ii][7];         // alarm value to turn text to red
                             $('#' + vlabel).html(cellContent);
                             $('#desc_' + vlabel).html('&#9650; ' + var_sunrise + ' | &#9660; ' + var_sunset);
                             break;
                     };
                 }
             });
-		}
-	});
-    $.refreshTimer = setInterval(RefreshData, 8000); //was 8000
+       }
+    });
+    $.refreshTimer = setInterval(RefreshData, pageRefreshTime);
 }
 
 function DomoticzAction(idx, param, switchcmd, level)
@@ -651,10 +614,10 @@ function DomoticzAction(idx, param, switchcmd, level)
         async: false,
         dataType: 'json',
         success: function() {
-            console.log('Domoticz action ' + switchcmd + " on idx " + idx + " succesfull");
+            console.log('Domoticz action ' + switchcmd + " on idx " + idx + " successful");
         },
         error: function() {
-            console.log('ERROR in: Domoticz action ' + switchcmd + " on idx " + idx + " succesfull");
+            console.log('ERROR in: Domoticz action ' + switchcmd + " on idx " + idx + " successful");
         }
     });
     RefreshData();
@@ -671,7 +634,7 @@ function SwitchToggle(idx, switchcmd)
 {
     DomoticzAction(idx, "switchlight", switchcmd, null);
 }
-	
+
 //switch dimmer and set level
 function SwitchDimmer(idx, level)
 {
@@ -732,9 +695,9 @@ function ZWaveDim(OpenDicht, level, idx)
         z_whichdimmer = idx; //Only show new value for dimmer which was pressed
     }
 }
-	
+
 // blinds percentage
-function BlindChangeStatus(OpenDicht,level,idx)
+function BlindChangeStatus(OpenDicht, level, idx)
 {
     if (OpenDicht == "plus") {
         var d = level + 10;
@@ -817,7 +780,7 @@ function SetSonos(action, idx)
         async: true,
         dataType: 'html', //was json but that always gave an error although it's working
         success: function(){
-            console.log(action + " on idx " + idx + " succesfull");
+            console.log(action + " on idx " + idx + " successful");
         },
         error: function(){
             console.log(action + " on idx " + idx + " ERROR");
@@ -866,7 +829,7 @@ function currentTime()
     var today = new Date();
     var h = stringpad(today.getHours().toString().trim(), 2);
     var m = stringpad(today.getMinutes().toString().trim(), 2);
-	var s = stringpad(today.getSeconds().toString().trim(), 2);
+    var s = stringpad(today.getSeconds().toString().trim(), 2);
 
    //Change the day to reflect your preferred translation
    var day = new Array();
