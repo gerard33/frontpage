@@ -408,12 +408,12 @@ function RefreshData()
                             case "Percentage":
                                 vdata = new String(vdata).split("%",1)[0];
                                 vdata = Math.round(vdata);
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+                                vdataSuffix = "<sup class='subscript'> %</sup>";
 
                                 break;
                             case "Lux":
                                 vdata = new String(vdata).replace("Lux", "");
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'>Lux</sup>";
+                                vdataSuffix = "<sup class='subscript'>Lux</sup>";
                                 break;
                         }
 
@@ -469,28 +469,28 @@ function RefreshData()
                                 vdesc = descArray[1];
                                 break;
                             case "Barometer":
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> hPa</sup>";
+                                vdataSuffix = "<sup class='subscript'> hPa</sup>";
                                 break;
                             case "Speed":
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> m/s</sup>";
+                                vdataSuffix = "<sup class='subscript'> m/s</sup>";
                                 break;
                             case "Visibility":
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> KM</sup>";
+                                vdataSuffix = "<sup class='subscript'> KM</sup>";
                                 break;
                             case "Temp":
                                 if (vdata < 0) {
                                     alarmcss = temp_freeze_color;
                                 }
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:0.5em;\'> &#176;C</sup>";
+                                vdataSuffix = "<sup class='superscript'> &#176;C</sup>";
                                 break;
                             case "Humidity":
                                 if(vdata > humidity_max){	// It's humid, font color will change
                                     alarmcss = humidity_max_color;
                                 }
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.5em;\'> %</sup>";
+                                vdataSuffix = "<sup class='subscript'> %</sup>";
                                 break;
                             case "Rain":
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> mm</sup>";
+                                vdataSuffix = "<sup class='subscript'> mm</sup>";
                                 break;
                             case "DirectionStr":
                                 // Replace S from South to Z from Zuiden, E to O using regex
@@ -498,11 +498,11 @@ function RefreshData()
                                 break;
                             case "Usage":
                                 vdata = new String(vdata).replace( " Watt","");
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> W</sup>";
+                                vdataSuffix = "<sup class='subscript'> W</sup>";
                                 break;
                             case "CounterToday":
                                 vdata = new String(vdata).replace( " kWh","");
-                                vdataSuffix = "<sup style=\'font-size:40%;vertical-align:top;position:relative;bottom:-0.6em;\'> kWh</sup>";
+                                vdataSuffix = "<sup class='subscript'> kWh</sup>";
                                 break;
                         }
 

@@ -1,0 +1,13 @@
+.subscript {
+    font-size:40%;
+    vertical-align:top;
+    position:relative;
+    bottom:-0.6em;
+}
+
+.superscript {
+    font-size:40%;
+    vertical-align:top;
+    position:relative;
+    bottom:0.5em;
+}
