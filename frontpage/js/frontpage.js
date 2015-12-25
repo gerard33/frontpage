@@ -114,6 +114,7 @@ function RefreshData()
 
                         //Dimmer
                         if(vtype == 'Level' && item.SwitchType == 'Dimmer') {
+                            var min = '';
                             if(vplusmin > 0 && vplusmin !=2 && vplusmin !=4) {
                                 if (vdata == txt_off) {
                                     if(vplusmin == 1) { //Normal dimmer
@@ -158,14 +159,14 @@ function RefreshData()
                                                 var min = "<img src=icons/down.png align=left vspace=12 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
                                                 //console.log(vdata + " | " + item.idx);
                                             }
-                                        } else {
-                                            //vdata2 = vdimmervalue; //used for ChangeStatus
-                                            //vdimmervalue = Math.round(vdimmervalue / 5)*5; //round to ten
-                                            vdata = vdimmervalue; //show current dim value
-                                            var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
-                                            var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeStatus('plus'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
-                                            var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeStatus('min'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>" //align=left
-                                        }
+                                    } else {
+                                        //vdata2 = vdimmervalue; //used for ChangeStatus
+                                        //vdimmervalue = Math.round(vdimmervalue / 5)*5; //round to ten
+                                        vdata = vdimmervalue; //show current dim value
+                                        var hlp = '<span onclick="SwitchToggle('+item.idx+',\'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
+                                        var plus = "<img src=icons/up.png align=right vspace=12 onclick=ChangeStatus('plus'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>"; //align=right replaced by hspace and vspace
+                                        var min = "<img src=icons/down.png align=left vspace=12 onclick=ChangeStatus('min'," + vdata + "," + item.idx + ","+ vdimmercurrent+")>" //align=left
+                                    }
                                 }
                             }
                             vdata = min.concat(hlp,plus);
@@ -245,6 +246,34 @@ function RefreshData()
                             //Push On gives wrong(undesired) status
                             case "Push On Button":
                                 vdata = 'Off'
+                            case "Motion Sensor":
+                            case "Contact":
+                            case "Door Lock":
+                                switchclick = '';
+                                if (vplusmin == vplusmin_type_presence) {
+                                    if (vdata == txt_on) {
+                                        vdata = txt_presence_home;
+                                    } else {
+                                        vdata = txt_presence_away;
+                                    }
+                                }
+                                if (vplusmin == vplusmin_type_contact) {
+                                    if (vdata == txt_on) {
+                                        vdata = txt_contact_open;
+                                    } else {
+                                        vdata = txt_contact_closed;
+                                    }
+                                }
+                                break;
+                            case "Doorbell":
+                                if (item.Data == doorbell_status) {
+                                    //lightbox_open('camera1', 15400);
+                                    vdata = "Tringgg";
+                                    //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
+                                } else {
+                                    vdata = item.Status;
+                                }
+                                break;
                             case "On/Off":
                                 switchclick='';
                                 if (vdata == 'Off') {
@@ -326,32 +355,6 @@ function RefreshData()
                         }
 
                         switch (item.idx) {
-                            // replace text when phone is at home
-                            case idx_Iphone5s:
-                            case idx_Telefoon_m:
-                                if (vdata == txt_on) {
-                                    vdata = new String(vdata).replace(txt_on, "Thuis");
-                                } else {
-                                    vdata = new String(vdata).replace(txt_off, "Weg");
-                                }
-                                break;
-
-                            case idx_Voordeur:
-                            case idx_Garagedeur:
-                                if (vstatus == "Closed") {
-                                    vdata = "Dicht";
-                                } else {
-                                    vdata = "Open";
-                                    alarmcss = color_off;
-                                }
-                                break;
-                            case idx_doorbell:
-                                if (vdata == doorbell_status) {
-                                    lightbox_open('camera1', 15400);
-                                    vdata=new String(vdata).replace( "On", "Tringgg");
-                                    //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
-                                }
-                                break;
                             case idx_BewegingF:
                                 if(vdata == 'On,'){
                                     vdata = new String(vdata).replace(",", "");
@@ -722,7 +725,7 @@ function ChangeTherm(dimtype, stepsize, idx, currentvalue, thermmax)
             console.log('ERROR');
         }
     });
- 	RefreshData();
+    RefreshData();
 }
 
 function getSonosInfo(action, idx)
@@ -775,25 +778,25 @@ function ChangeVolumeDown(idx)
 {
     SetSonos("VolumeDown", idx);
 }
-	
+
 //Change radio of Sonos
 function ChangeRadio(idx)
 {
     SetSonos("NextRadio", idx);
 }
-	
+
 //Change radio of Sonos
 function ChangeRadioPrev(idx)
 {
     SetSonos("PrevRadio", idx);
 }
-	
+
 //Next song of Sonos
 function ChangeNextSong(idx)
 {
     SetSonos("Next", idx);
 }
-	
+
 //Previous song of Sonos
 function ChangePreviousSong(idx)
 {
@@ -901,7 +904,7 @@ function getLastSeen(dateString)
     var dateArray = reggie.exec(dateString);
     var dateObject = new Date(
         (+dateArray[1]),
-        (+dateArray[2])-1, 				// Careful, month starts at 0!
+        (+dateArray[2])-1, // Careful, month starts at 0!
         (+dateArray[3]),
         (+dateArray[4]),
         (+dateArray[5]),

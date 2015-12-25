@@ -18,6 +18,14 @@ var txt_blind_up = '\'Zonnescherm uit\'';
 var txt_blind_down = '\'Zonnescherm in\'';
 var txt_blind_stop = '\'Zonnescherm stoppen\'';
 
+var vplusmin_type_presence = 7;
+var txt_presence_home = 'Thuis';
+var txt_presence_away = 'Weg';
+
+var vplusmin_type_contact = 8;
+var txt_contact_open = 'Open';
+var txt_contact_closed = 'Dicht';
+
 <!-- Change the timeout of the PopUp -->
 var switch_protected_timeout = '1500';
 var switch_on_timeout = '1500';
@@ -43,10 +51,6 @@ var show_sonos_volume = true; <!-- show Sonos volume in desc text -->
 <!-- Change idx of special items -->
 var idx_FibaroWP = '1100';
 var idx_Alarm = '11109';
-var idx_Iphone5s = '214';
-var idx_Telefoon_m = '185';
-var idx_Voordeur = '23'; //'207';
-var idx_Garagedeur = '27'; //'208';
 var idx_BewegingF = '145';
 var idx_ZonV = '110';
 var idx_ZonA = '111';
@@ -56,8 +60,6 @@ var idx_TV = '240';
 
 var idx_water_meter = '1100';
 var idx_doorbell = '1100';
-var idx_electricity_today = '1100';
-var idx_gas_today = '1100';
 
 var IsNight = false;
 var pageRefreshTime = 8000;
@@ -87,12 +89,13 @@ var doorbell_cmd = "lightbox_open('camera1', 15400);"
 // ############################################################################################################
 
 $(document).ready(function() {
-    $.roomplan = 2; // define roomplan in Domoticz and create items below.
+    $.roomplan = 2; // define roomplan in Domoticz and create items below, don't use roomplan = 0, it will get all your devices, which might slow down domoticz.
     $.domoticzurl = "http://192.168.1.49:8080";
 
     // format: idx, value, label, description,
     // lastseen(1 when lastseen is wanted, 2 is only time),
-    // plusmin button or protected (0 for empty, 1 for buttons, 2 for volume of Sonos, 4 for protected, 5 for zwave dimmer, 6 for protected when on), [override css], [alarm value]
+    // plusmin button or protected (0 for empty, 1 for buttons, 2 for volume of Sonos, 4 for protected, 5 for zwave dimmer, 6 for protected when on, 7 for presence, 8 for open/closed),
+    // [override css], [alarm value]
     $.PageArray = [
         ['0', 'Desc',               'cell1',    'Buiten','0','0'], //Desc means show the sub cells
         ['805', 'Temp',             'cell1a',   'Buiten','1','0'], //Lastseen only from cell_a possible
@@ -158,7 +161,7 @@ $(document).ready(function() {
         ['147', 'Data',             'cell2_5b', 'Temperatuur Fibaro','1','0'],
 
         ['0', 'Desc',               'cell2_6',  'Zon','1','1'],
-        ['1096', 'Status',            'cell2_7',  'Testdevice','1','0'],
+        ['1096', 'Status',            'cell2_7',  'Testdevice','1', vplusmin_type_contact],
         //['145','Data',            'cell2_8',  'Bewegingssensor F','1','4'],
         ['8', 'Data',               'cell2_8',  'HDD /','1','0', '', 20],
         ['10', 'Data',              'cell2_9',  'CPU Usage','1','0', 'border: 1px;', 10],
