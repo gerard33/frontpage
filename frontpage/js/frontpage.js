@@ -106,7 +106,7 @@ function RefreshData()
                                 vdata = txt_off; //show text from frontpage_settings
                             } else {
                                 alarmcss = color_on;
-                                vdata = txt_on;	//show text from frontpage_settings
+                                vdata = txt_on; //show text from frontpage_settings
                             }
                         }
 
@@ -299,51 +299,29 @@ function RefreshData()
                                 break;
 
                             case "Blinds Percentage":
-                                if(item.Status == 'Closed') {
-                                    vdata = 100;
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                }
-                                else if (item.Status == 'Open') {
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                }
-                                else {
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                }
-                                vdesc = new String(vdesc).replace(vdesc, vdesc + "<span style='color:#1B9772;font-size:20px;'> " + (100-vdata) + "&#37;</span>");
-                                vdata = min.concat(down, up, plus);
-                                break;
-
                             case "Blinds Percentage Inverted":
-                                if(item.Status == 'Closed') {
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+                                var plus = "<img src=icons/up.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + item.LevelInt + "," + item.idx + ")>";
+                                var min = "<img src=icons/down.png  vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + item.LevelInt + "," + item.idx + ")>";
+
+                                var iconClosed = '/images/blinds48.png';
+                                var iconOpen = '/images/blindsopen48sel.png';
+                                if (item.Status == 'Closed') {
+                                    iconClosed = '/images/blinds48sel.png';
+                                    iconOpen = '/images/blindsopen48.png';
                                 }
-                                else if (item.Status == 'Open') {
-                                    vdata = 100;
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
+
+                                var downAction = 'On';
+                                var upAction = 'Off';
+                                if (item.SwitchType == "Blinds Percentage Inverted") {
+                                    downAction = 'Off';
+                                    upAction = 'On';
                                 }
-                                else {
-                                    var down = '<img src='+$.domoticzurl+'/images/blinds48.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_down+')">';
-                                    var up = '<img src='+$.domoticzurl+'/images/blindsopen48sel.png  hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'On\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_up+')">';
-                                    //var plus = "<img src=icons/up.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
-                                    //var min = "<img src=icons/down.png vspace=12 hspace=4 width=30 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                }
-                                vdesc = new String(vdesc).replace(vdesc, vdesc + "<span style='color:#1B9772;font-size:20px;'> " + vdata + "&#37;</span>");
-                                vdata = min.concat(down,up,plus);
+
+                                var down = '<img src=' + $.domoticzurl + iconClosed + ' hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'' + downAction + '\');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_blind_down+')">';
+                                var up = '<img src=' + $.domoticzurl + iconOpen + ' hspace=1 width=40 onclick="SwitchToggle('+item.idx+', \'' + upAction + '\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_blind_up+')">';
+
+                                vdesc = new String(vdesc).replace(vdesc, vdesc + "<span style='color:#1B9772;font-size:20px;'> " + item.Level + "&#37;</span>");
+                                vdata = min.concat(down, up, plus);
                                 break;
                         }
 
@@ -535,7 +513,7 @@ function RefreshData()
                             //var vtype=    $.PageArray[ii][1];     // Domoticz type (like Temp, Humidity)
                             var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
                             var vdata=      $.PageArray[ii][3];     // description (link in this case
-                            var vdesc = 	'';
+                            var vdesc =     '';
                             //var vattr=    $.PageArray[ii][6];     // extra css attributes
                             var valarm=     $.PageArray[ii][7];     // alarm value to turn text to red
                             //var vdata=    item[vtype];            // current value
@@ -697,22 +675,21 @@ function ZWaveDim(OpenDicht, level, idx)
 }
 
 // blinds percentage
-function BlindChangeStatus(OpenDicht, level, idx)
+function BlindChangeStatus(OpenDicht, levelInt, idx)
 {
+    var d = 0;
     if (OpenDicht == "plus") {
-        var d = level + 10;
-        if(d > 100) {
-            d = 100;
+        var d = levelInt + 2;
+        if(d > 16) {
+            d = 16;
         }
-        DomoticzAction(idx, "switchlight", "Set%20Level", d);
     } else {
-        var d = level - 10;
-        //console.log("in min",d,level);
-        if( d < 0 ) {
-            d = 0;
+        var d = levelInt - 2;
+        if( d < 1 ) {
+            d = 1;
         }
-        DomoticzAction(idx, "switchlight", "Set%20Level", d);
     }
+    DomoticzAction(idx, "switchlight", "Set%20Level", d);
 }
 
 //Thermostat

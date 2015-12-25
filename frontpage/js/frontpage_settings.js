@@ -158,7 +158,7 @@ $(document).ready(function() {
         ['147', 'Data',             'cell2_5b', 'Temperatuur Fibaro','1','0'],
 
         ['0', 'Desc',               'cell2_6',  'Zon','1','1'],
-        ['21', 'Status',            'cell2_7',  'Slaapkamer kast','1','0'],
+        ['1096', 'Status',            'cell2_7',  'Testdevice','1','0'],
         //['145','Data',            'cell2_8',  'Bewegingssensor F','1','4'],
         ['8', 'Data',               'cell2_8',  'HDD /','1','0', '', 20],
         ['10', 'Data',              'cell2_9',  'CPU Usage','1','0', 'border: 1px;', 10],
