@@ -100,15 +100,15 @@ function RefreshData()
                         }
 
                         //switch layout cell
-                        if (vplusmin > 0) { //layout cell, percentage font-size was 80%
-                            if (vstatus == 'Off') {
-                                alarmcss = color_off;
-                                vdata = txt_off; //show text from frontpage_settings
-                            } else {
-                                alarmcss = color_on;
-                                vdata = txt_on; //show text from frontpage_settings
-                            }
-                        }
+                        //if (vplusmin > 0) { //layout cell, percentage font-size was 80%
+                        //    if (vstatus == 'Off') {
+                        //        alarmcss = color_off;
+                        //        vdata = txt_off; //show text from frontpage_settings
+                        //    } else {
+                        //        alarmcss = color_on;
+                        //        vdata = txt_on; //show text from frontpage_settings
+                        //    }
+                        //}
 
                         //alarmcss=';background-image:url(\'../icons/' + vdata + 'dimmer.png\');background-repeat:no-repeat;background-position:50%25%;color:#08c5e3;font-size:0%;vertical-align:top;';
 
@@ -271,19 +271,28 @@ function RefreshData()
                                     vdata = "Tringgg";
                                     //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
                                 } else {
-                                    vdata = item.Status;
+                                    vdata = item.Data;
                                 }
                                 break;
                             case "On/Off":
                                 switchclick='';
+                                if (vplusmin == 0) {
+                                    if (vstatus == 'Off') {
+                                        alarmcss = color_off;
+                                        vdata = txt_off; //show text from frontpage_settings
+                                    } else {
+                                        alarmcss = color_on;
+                                        vdata = txt_on; //show text from frontpage_settings
+                                    }
+                                }
                                 if (vdata == 'Off') {
                                     switchclick = 'onclick="SwitchToggle('+ item.idx +', \'On\');lightbox_open(\'switch\', ' + switch_on_timeout + ', ' + txt_switch_on + ')"';
                                     alarmcss = color_off;
-                                    vdata = txt_off;
+                                    vdata = icon_off;
                                 } else if (vdata == 'On') {
                                     switchclick = 'onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', ' + switch_off_timeout + ', ' + txt_switch_off + ')"';
                                     alarmcss = color_on;
-                                    vdata = txt_on;
+                                    vdata = icon_on;
                                 }
                                 if (item.Protected == true || vplusmin == 4) {
                                     vdesc = vdesc + desc_protected;

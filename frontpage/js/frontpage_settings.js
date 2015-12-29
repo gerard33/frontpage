@@ -1,8 +1,8 @@
 <!-- Change the text for on/off switches -->
-var txt_on = '<img src=icons/on.png>';
-var txt_off = '<img src=icons/off.png>'; 
-// var txt_on = 'Aan';
-// var txt_off = 'Uit';
+var icon_on = '<img src=icons/on.png>';
+var icon_off = '<img src=icons/off.png>';
+var txt_on = 'Aan';
+var txt_off = 'Uit';
 var txt_zonon = 'Uit'; <!-- Dicht -->
 var txt_zonoff = 'In'; <!-- Open -->
 var txt_zonstopped = 'Gestopt';
@@ -97,30 +97,30 @@ $(document).ready(function() {
     // plusmin button or protected (0 for empty, 1 for buttons, 2 for volume of Sonos, 4 for protected, 5 for zwave dimmer, 6 for protected when on, 7 for presence, 8 for open/closed),
     // [override css], [alarm value]
     $.PageArray = [
-        ['0', 'Desc',               'cell1',    'Buiten','0','0'], //Desc means show the sub cells
-        ['805', 'Temp',             'cell1a',   'Buiten','1','0'], //Lastseen only from cell_a possible
-        ['805', 'Humidity',         'cell1b',   'Buiten','0','0'],
-        ['0', 'Desc',               'cell2',    'Badkamer','0','0'],
-        ['363', 'Temp',             'cell2a',   'Badkamer','1','0'],
-        ['363', 'Humidity',         'cell2b',   'Badkamer','0','0'],
-        ['12', 'ForecastStr',       'cell3',    'Woonkamer','0','0'],
-        ['0', 'Desc',               'cell4',    'Schuurtje','0','0'],
-        ['802', 'Temp',             'cell4a',   'Schuurtje','1','0'],
-        ['802', 'Humidity',         'cell4b',   'Schuurtje','0','0'],
-        ['0', 'Desc',               'cell5',    'Boven','0','0'],
-        ['366', 'Temp',             'cell5a',   'Boven','1','0'],
-        ['366', 'Humidity',         'cell5b',   'Boven','0','0'],
+        ['0', 'Desc',               'cell1',    'Buiten', '0', '0'], //Desc means show the sub cells
+        ['805', 'Temp',             'cell1a',   'Buiten', '1', '0'], //Lastseen only from cell_a possible
+        ['805', 'Humidity',         'cell1b',   'Buiten', '0', '0'],
+        ['0', 'Desc',               'cell2',    'Badkamer', '0', '0'],
+        ['363', 'Temp',             'cell2a',   'Badkamer', '1', '0'],
+        ['363', 'Humidity',         'cell2b',   'Badkamer', '0', '0'],
+        ['12', 'ForecastStr',       'cell3',    'Woonkamer', '0', '0'],
+        ['0', 'Desc',               'cell4',    'Schuurtje', '0', '0'],
+        ['802', 'Temp',             'cell4a',   'Schuurtje', '1', '0'],
+        ['802', 'Humidity',         'cell4b',   'Schuurtje', '0', '0'],
+        ['0', 'Desc',               'cell5',    'Boven','0', '0'],
+        ['366', 'Temp',             'cell5a',   'Boven','1', '0'],
+        ['366', 'Humidity',         'cell5b',   'Boven','0', '0'],
 
-        ['1009', 'Status',          'cell6',    'AppleTV XBMC','1','1'],
-        ['371', 'Level',            'cell7',    'Verlichting Links','1','1'],
-        ['447', 'Temp',             'cell8',    'Woonkamer','1','0'],
+        ['1009', 'Status',          'cell6',    'AppleTV XBMC', '1', '1'],
+        ['371', 'Status',            'cell7',    'Verlichting Links', '1', '1'],
+        ['447', 'Temp',             'cell8',    'Woonkamer', '1', '0'],
         ['319', 'Status',           'cell9',    'Verlichting Rechts','1','1'],
-        ['372', 'Status',           'cell10',   'AppleTV 3','1','0'], //6 is protected when on
+        ['372', 'Status',           'cell10',   'AppleTV 3','1','1'], //6 is protected when on
 
-        ['935', 'Status',           'cell11',   'RPi Zolder','1','0'],
-        ['936', 'Status',           'cell12',   'RPi Meterkast','1','0'],
-        ['503', 'Status',           'cell13',   'Status Receiver','1','1'],
-        ['330', 'Status',           'cell14',   'Status TV','1','0'],
+        ['934', 'Status',           'cell11',   'ESP Boven','1', 0],
+        ['887', 'Status',           'cell12',   'Deurbel','1', 0],
+        ['503', 'Status',           'cell13',   'Status Receiver','1', 0],
+        ['330', 'Status',           'cell14',   'Status TV','1', 0],
         //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
         //['177', 'Status',         'cell15',   'Tuin','1','0'],
         ['933', 'Status',           'cell15',   'Synology','1','0'],
@@ -134,7 +134,7 @@ $(document).ready(function() {
         ['406', 'Usage',            'cell19',   'Windmolen nu','1','0'],
         ['406', 'CounterToday',     'cell20',   'Windmolen vandaag','1','0'],
 
-        ['1006', 'Status',          'cell21',   'Receiver boven','1','0'],
+        ['1006', 'Status',          'cell21',   'Receiver boven','1', 1],
         ['0', 'Tijd',               'cell22',   'Tijd','0','0'],
         ['1003', 'Status',          'cell23',   'Buitenverlichting','1','1'],
 
@@ -160,8 +160,8 @@ $(document).ready(function() {
         ['154', 'Data',             'cell2_5a', 'Temperatuur Fibaro','1','0'],
         ['147', 'Data',             'cell2_5b', 'Temperatuur Fibaro','1','0'],
 
-        ['0', 'Desc',               'cell2_6',  'Zon','1','1'],
-        ['1096', 'Status',            'cell2_7',  'Testdevice','1', vplusmin_type_contact],
+        ['935', 'Status',               'cell2_6',  'RPi Zolder', 1 , 0],
+        ['936', 'Status',            'cell2_7',  'RPi Meterkast', 1, 0], //vplusmin_type_contact],
         //['145','Data',            'cell2_8',  'Bewegingssensor F','1','4'],
         ['8', 'Data',               'cell2_8',  'HDD /','1','0', '', 20],
         ['10', 'Data',              'cell2_9',  'CPU Usage','1','0', 'border: 1px;', 10],
