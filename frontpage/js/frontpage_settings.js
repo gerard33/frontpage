@@ -123,7 +123,7 @@ $(document).ready(function() {
         ['330', 'Status',           'cell14',   'Status TV','1', 0],
         //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
         //['177', 'Status',         'cell15',   'Tuin','1','0'],
-        ['933', 'Status',           'cell15',   'Synology','1','0'],
+        ['1012', 'Status',           'cell15',   'Kerstboom', 1, 1],
 
         ['616', 'CounterToday',     'cell16',   'Vandaag','1','0'],
         ['616', 'Usage',            'cell17',   'Huidig gebruik','1','0'],
