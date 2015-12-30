@@ -24,13 +24,13 @@
     <link rel="stylesheet" href="css/style.css" id="generic-styles">
     <!-- GZ check if browser is on Android, that will be my Nexus, then show different css to fit on the Nexus screen -->
     <script type="text/javascript">
-        if (navigator.userAgent.match(/Android/)) {
-            document.write('<link rel="stylesheet" href="css/frontpage-day_nexus.css" id="light-styles">');
-            document.write('<link rel="stylesheet" href="css/frontpage-night_nexus.css" id="dark-styles">');
-        } else {
+        //if (navigator.userAgent.match(/Android/)) {
+        //    document.write('<link rel="stylesheet" href="css/frontpage-day_nexus.css" id="light-styles">');
+        //    document.write('<link rel="stylesheet" href="css/frontpage-night_nexus.css" id="dark-styles">');
+        //} else {
             document.write('<link rel="stylesheet" href="css/frontpage-day.css" id="light-styles">');
             document.write('<link rel="stylesheet" href="css/frontpage-night.css" id="dark-styles">');
-        }
+        //}
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -119,7 +119,7 @@
                                 <div id="ls_cell25"></div>
                                 <div id="cell25">
                                     <!-- <img src="http://www3.buienradar.nl/images.aspx?jaar=-3&soort=sb&t="  onClick="lightbox_open('camera2', 15400);" width="200px" onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 15000)' onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 1000)' class='camera' /> -->
-                                    <img src="http://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256"
+                                    <img src="http://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=200"
                                          onClick="lightbox_open('camera2', 46200);" class='camera'/></div>
                                 <div id="bcell25"></div>
                                 <div id="desc_cell25">Buienradar</div>

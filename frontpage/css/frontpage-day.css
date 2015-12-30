@@ -1,7 +1,7 @@
 body,html{
     height: 100%;
     margin: 0px;
-    padding: 25px 0px 0px 0px;
+	margin: -10px 0px 0px 0px;
 	background-color: black;
 	background-image: url('images/day_y.jpg');
 	background-repeat: no-repeat;

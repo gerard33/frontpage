@@ -484,7 +484,10 @@ function RefreshData()
                                 break;
                             case "DirectionStr":
                                 // Replace S from South to Z from Zuiden, E to O using regex
-                                vdata = new String(vdata).replace(/E/gi, "O").replace( /S/gi, "Z");
+                                direction = new String(vdata).replace(/E/gi, "O").replace( /S/gi, "Z");
+                                vdata = "<img src='icons/arrow-gray.png' width='20px' style='-webkit-transform: rotate(" + (item.Direction - 90) + "deg);'>&nbsp;";
+                                vdata += direction;
+                                vdata += " " + item.Speed +  "<sup class='subscript'> m/s</sup>";
                                 break;
                             case "Usage":
                                 vdata = new String(vdata).replace( " Watt","");
@@ -897,10 +900,10 @@ function getWeatherData(vdata)
             weatherContent = {day: "icons/day_sun.png", night: "icons/day_sun.png", dayText: "Zonnig", nightText: "Helder"};
     }
 
-    vdata = "<img src='" + weatherContent.day + "' width='272' height='255' style='margin-top: -30px;'>";
+    vdata = "<img src='" + weatherContent.day + "' width='272' style='margin-top: -30px;'>";
     vdesc = weatherContent.dayText
     if (IsNight) {
-        vdata = "<img src='" + weatherContent.night + "' width='272' height='255' style='margin-top: -30px;'>";
+        vdata = "<img src='" + weatherContent.night + "' width='272' style='margin-top: -30px;'>";
         vdesc = weatherContent.nightText
     }
     return [vdata, vdesc];

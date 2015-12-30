@@ -1,7 +1,7 @@
 body,html{
     height: 100%;
-    margin: 0px;
-    padding: 25px 0px 0px 0px;
+    margin: -10px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 	background-color: black;
 	background-image: url('images/night_y.jpg');
 	background-repeat: no-repeat;
@@ -155,8 +155,8 @@ a:hover { text-decoration: none; color: #ADABAE; }
 	width: 277px;
 	padding: 5px;
 	border: 1px solid #666;
-	height: 217px;
-	line-height: 210px; 		
+	height: 197px;
+	line-height: 210px;
 	//font-size: 90px;
 	color: #ADABAE !important;
 	font-size: 30px;	
@@ -185,7 +185,7 @@ a:hover { text-decoration: none; color: #ADABAE; }
 	width: 162px;
 	padding: 10px;
 	border: 1px solid #666;
-	height: 90px;
+	height: 80px;
 	line-height: 75px; 		
 	//font-size: 90px;
 	color: #ADABAE !important;
@@ -236,9 +236,9 @@ a:hover { text-decoration: none; color: #ADABAE; }
 #bcell2_1, #bcell2_2, #bcell2_4, #bcell2_5
 {
 	//width: 162px;
-	margin: -111px 0px 0px 0px;
+	margin: -101px 0px 0px 0px;
 	padding: 10px 10px 6px 10px;
-	height: 95px;
+	height: 85px;
 	-webkit-border-radius: 5px 5px 5px 5px;
 	border-radius: 5px 5px 5px 5px;	
 	background-color: #35353F;
@@ -251,10 +251,10 @@ a:hover { text-decoration: none; color: #ADABAE; }
 #bcell2_3, #bcell2_25
 {
 	//width: 277px;
-	margin: -229px 0px -1px 1px;
+	margin: -209px 0px -1px 1px;
 	//padding: 5px;
 	//border: 1px solid #666;
-	height: 229px;	
+	height: 209px;
 	line-height: 210px;
 	-webkit-border-radius: 5px 5px 5px 5px;
 	border-radius: 5px 5px 5px 5px;	
@@ -350,7 +350,7 @@ a:hover { text-decoration: none; color: #ADABAE; }
   filter: alpha(opacity=70);
   background-size: 272px 216px;
   width: 270px;
-  height: 216px;
+  height: 196px;
 }
 
 /*
