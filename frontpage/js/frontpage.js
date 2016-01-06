@@ -485,7 +485,7 @@ function RefreshData()
                             case "DirectionStr":
                                 // Replace S from South to Z from Zuiden, E to O using regex
                                 direction = new String(vdata).replace(/E/gi, "O").replace( /S/gi, "Z");
-                                vdata = "<img src='icons/arrow-gray.png' width='20px' style='-webkit-transform: rotate(" + (item.Direction - 90) + "deg);'>&nbsp;";
+                                vdata = "<img src='icons/arrow-gray.png' width='20px' style='-webkit-transform: rotate(" + (item.Direction + 90) + "deg);'>&nbsp;";
                                 vdata += direction;
                                 vdata += " " + item.Speed +  "<sup class='subscript'> m/s</sup>";
                                 break;
