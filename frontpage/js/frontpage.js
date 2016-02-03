@@ -266,7 +266,7 @@ function RefreshData()
                                 }
                                 break;
                             case "Doorbell":
-                                if (item.Data == doorbell_status) {
+                                if (item.Data.substr(0, 2) == doorbell_status) {
                                     //lightbox_open('camera1', 15400);
                                     vdata = "Tringgg";
                                     //vdesc=new String(vdesc).replace( "Deurbel", "Deurbel");
@@ -474,7 +474,7 @@ function RefreshData()
                                 vdataSuffix = "<sup class='superscript'> &#176;C</sup>";
                                 break;
                             case "Humidity":
-                                if(vdata > humidity_max){	// It's humid, font color will change
+                                if(vdata > humidity_max){ // It's humid, font color will change
                                     alarmcss = humidity_max_color;
                                 }
                                 vdataSuffix = "<sup class='subscript'> %</sup>";

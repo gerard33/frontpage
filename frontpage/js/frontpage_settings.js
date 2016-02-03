@@ -108,22 +108,22 @@ $(document).ready(function() {
         ['802', 'Temp',             'cell4a',   'Schuurtje', '1', '0'],
         ['802', 'Humidity',         'cell4b',   'Schuurtje', '0', '0'],
         ['0', 'Desc',               'cell5',    'Boven','0', '0'],
-        ['366', 'Temp',             'cell5a',   'Boven','1', '0'],
-        ['366', 'Humidity',         'cell5b',   'Boven','0', '0'],
+        ['1143', 'Temp',             'cell5a',   'Boven','1', '0'],
+        ['1143', 'Humidity',         'cell5b',   'Boven','0', '0'],
 
         ['1009', 'Status',          'cell6',    'AppleTV XBMC', '1', '1'],
-        ['371', 'Status',            'cell7',    'Verlichting Links', '1', '1'],
+        ['371', 'Status',           'cell7',    'Verlichting Links', '1', '1'],
         ['447', 'Temp',             'cell8',    'Woonkamer', '1', '0'],
         ['319', 'Status',           'cell9',    'Verlichting Rechts','1','1'],
         ['372', 'Status',           'cell10',   'AppleTV 3','1','1'], //6 is protected when on
 
         ['934', 'Status',           'cell11',   'ESP Boven','1', 0],
-        ['887', 'Status',           'cell12',   'Deurbel','1', 0],
+        ['1117', 'Status',          'cell12',   'Deurbel','1', 0],
         ['503', 'Status',           'cell13',   'Status Receiver','1', 0],
         ['330', 'Status',           'cell14',   'Status TV','1', 0],
         //Level using for ZWave dimmer, vplusmin = 5 to start with level from z_dimmer
         //['177', 'Status',         'cell15',   'Tuin','1','0'],
-        ['1012', 'Status',           'cell15',   'Kerstboom', 1, 1],
+        ['1012', 'Status',           'cell15',   'TV', 1, 1],
 
         ['616', 'CounterToday',     'cell16',   'Vandaag','1','0'],
         ['616', 'Usage',            'cell17',   'Huidig gebruik','1','0'],
