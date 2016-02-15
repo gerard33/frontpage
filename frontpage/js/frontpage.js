@@ -334,11 +334,13 @@ function RefreshData()
 	
 	//Thermostat
 	if(vtype == 'SetPoint' && vplusmin > 0) {
+		vdata= item[vtype]; //added to show setpoint in stead on or off
 		var hlp = '<span style='+vattr+'>'+ vdata+'</span>';
-		var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=ChangeTherm('plus'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
-		var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=ChangeTherm('min'," +vplusmin+ "," + item.idx + ","+ vdata+","+ valarm+")>";
-		vdata = min.concat(hlp,plus);
+		var vplusmin05 = '0.5'; //added to set setpoint with 0.5 steps
+		var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=ChangeTherm('plus'," +vplusmin05+ "," + item.idx + ","+ vdata+","+ valarm+")>";
+		var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=ChangeTherm('min'," +vplusmin05+ "," + item.idx + ","+ vdata+","+ valarm+")>";
 		//console.log(vdata);
+		vdata = min.concat(hlp,plus);
 	}
 	
 	//Blinds
