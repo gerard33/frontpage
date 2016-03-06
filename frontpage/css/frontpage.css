@@ -46,12 +46,65 @@ div#cnt {
     display: inline-block;
     vertical-align: middle;
     white-space: normal;
+    width: 963px;
 }
 
 .frame {
     float: left;
     margin: 0px;
     padding: 0px 2px 0px 2px;
+}
+
+.cell {
+    float: left;
+    margin: 0px;
+    padding: 0px 2px 0px 2px;
+}
+
+.cell-h {
+    height: 90px !important;
+    line-height: 75px !important;
+}
+
+.cell-s {
+    width: 9.51%;
+}
+
+.cell-m {
+    width: 19.558484%;
+}
+
+.cell-l {
+    width: 29.6128%;
+}
+
+.cell-xl {
+    width: 49.55%;
+}
+
+.cell-wide {
+    width: 40%;
+}
+
+.content {
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px;
+    border: 1px solid #666;
+    font-size: 30px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    position: relative;
+    cursor: pointer;
+    z-index: 20;
+    height: 65px;
+    line-height: 55px;
+    /*width: 100%;*/
+}
+
+.cell-content-wide {
+    font-size: 22px !important;
+    line-height: 35px !important;
 }
 
 .cell-background {
@@ -78,27 +131,38 @@ div#cnt {
     line-height: 240px;
 }
 
-.cell-content {
-    font-weight: bold;
-    text-transform: uppercase;
-    width: 162px;
-    padding: 10px;
-    border: 1px solid #666;
-    font-size: 30px;
-    -webkit-border-radius: 5px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
-    position: relative;
-    cursor: pointer;
-    z-index: 20;
-    height: 65px;
-    line-height: 55px;
+.cell-background-medium {
+    /*width: 277px;*/
+    margin: -228px 0px -1px 1px !important;
+    padding: 0px;
+    /*//border: 1px solid #666;*/
+    height: 228px;
+    line-height: 150px;
 }
 
+/*.cell-content {*/
+    /*font-weight: bold;*/
+    /*text-transform: uppercase;*/
+    /*width: 162px;*/
+    /*padding: 10px;*/
+    /*border: 1px solid #666;*/
+    /*font-size: 30px;*/
+    /*-webkit-border-radius: 5px 5px 5px 5px;*/
+    /*border-radius: 5px 5px 5px 5px;*/
+    /*position: relative;*/
+    /*cursor: pointer;*/
+    /*z-index: 20;*/
+    /*height: 65px;*/
+    /*line-height: 55px;*/
+/*}*/
+
+/* Higher cell for double content */
 .cell-high {
     height: 90px;
     line-height: 75px;
 }
 
+/* For double content in 1 cell */
 .cell-content2 {
     margin: -15px 0px -42px 0px;
 }
@@ -151,6 +215,16 @@ div#cnt {
     z-index: 20;
 }
 
+.content-medium {
+    /*width: 277px; /!* 277px *!/*/
+    padding: 5px;
+    height: 217px; /* 217px */
+    line-height: 300px;
+    font-size: 30px;
+}
+
+
+
 .cell-buienradar {
     overflow: hidden;
 }
@@ -160,11 +234,11 @@ div#cnt {
     width: 184px;
 }
 
-.cell-date {
-    width: 560px;
-    font-size: 22px;
-    line-height: 35px;
-}
+/*.cell-date {*/
+    /*width: 560px;*/
+    /*font-size: 22px;*/
+    /*line-height: 35px;*/
+/*}*/
 
 #all { 
     margin-left: -35px;
@@ -226,6 +300,18 @@ div#cnt {
     filter: alpha(opacity=70);
     background-size: 272px 216px;
     width: 475px;
+  /*height: 313px;*/
+}
+.camera-medium
+{
+    margin-left: -5px;
+    margin-top: -5px;
+    background: url(offline.jpg) no-repeat;
+    -moz-opacity: 0.7;
+    opacity:.70;
+    filter: alpha(opacity=70);
+    background-size: 272px 216px;
+    width: 313px;
   /*height: 313px;*/
 }
 

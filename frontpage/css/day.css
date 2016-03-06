@@ -31,3 +31,29 @@ a:hover { text-decoration: none; color: #333333; }
 .cell-big {
     color: #c0c0c0 !important;
 }
+
+.background {
+    background-color: #eeeeee;
+    opacity: 0.7;
+}
+
+.content {
+    color: #333333 !important;
+    /*color: #999;*/
+}
+
+.header {
+    color: #333333;
+}
+
+.description {
+    color: #ffffff;
+}
+
+.footer {
+    background: #444444;
+}
+
+/*.cell-big {*/
+    /*color: #c0c0c0 !important;*/
+/*}*/
