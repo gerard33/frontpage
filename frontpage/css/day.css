@@ -1,0 +1,33 @@
+body,html{
+    background-image: url('images/day_y.jpg');
+}
+
+a, a:visited { text-decoration: none; color: #333333; }
+a:hover { text-decoration: none; color: #333333; }
+
+
+.cell-background {
+    background-color: #eeeeee;
+    opacity: 0.7;
+}
+
+.cell-content {
+    color: #333333 !important;
+    /*color: #999;*/
+}
+
+.cell-header {
+    color: #333333;
+}
+
+.cell-description {
+    color: #ffffff;
+}
+
+.cell-footer {
+    background: #444444;
+}
+
+.cell-big {
+    color: #c0c0c0 !important;
+}

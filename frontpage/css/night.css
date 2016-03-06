@@ -1,0 +1,33 @@
+body,html{
+    background-image: url('images/night_y.jpg');
+}
+
+a, a:visited { text-decoration: none; color: #ADABAE; }
+a:hover { text-decoration: none; color: #ADABAE; }
+
+.cell-background {
+    background-color: #35353F;
+    opacity: 0.7;
+
+}
+
+.cell-content {
+    color: #ADABAE !important;
+    /*color: #999;*/
+}
+
+.cell-header {
+    color: #ADABAE;
+}
+
+.cell-description {
+    color: #ADABAE;
+}
+
+.cell-footer {
+    background: #414141;
+}
+
+.cell-big {
+    color: #c0c0c0 !important;
+}

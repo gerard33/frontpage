@@ -1,0 +1,302 @@
+body,html{
+    height: 100%;
+    margin: -10px 0px 0px 0px;
+    background-color: black;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: top;
+    font-family: arimo, serif;
+}
+
+div#cnt {
+    width: 990px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.swipe {
+      overflow: hidden;
+      visibility: hidden;
+      position: relative;
+}
+.swipe-wrap {
+      overflow: hidden;
+      position: relative;
+}
+.swipe-wrap > div {
+      float:left;
+      width:100%;
+      min-height: 100%;
+      position: relative;
+}
+.v-wrap{
+    height: 100%;
+    white-space: nowrap;
+    text-align: center;
+}
+.v-wrap:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    margin-right: -.25em;
+    height: 100%; 
+}
+.v-box{
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+}
+
+.frame {
+    float: left;
+    margin: 0px;
+    padding: 0px 2px 0px 2px;
+}
+
+.cell-background {
+    margin: -86px 0px 0px 0px;
+    padding: 10px 10px 6px 10px;
+    height: 70px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.cell-background-high {
+    margin: -111px 0px 0px 0px;
+    height: 95px;
+}
+
+.cell-background-big {
+/*width: 277px;*/
+    margin: -319px 0px -1px 1px !important;
+    padding: 0px;
+/*//border: 1px solid #666;*/
+    height: 319px;
+    line-height: 240px;
+}
+
+.cell-content {
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 162px;
+    padding: 10px;
+    border: 1px solid #666;
+    font-size: 30px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    position: relative;
+    cursor: pointer;
+    z-index: 20;
+    height: 65px;
+    line-height: 55px;
+}
+
+.cell-high {
+    height: 90px;
+    line-height: 75px;
+}
+
+.cell-content2 {
+    margin: -15px 0px -42px 0px;
+}
+
+.cell-header {
+    font-family: arimo;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-top: 0px; /*-27px */
+    height: 0px; /*27px */
+    line-height: 140%; /*68px */
+    position: relative;
+    z-index: 40;
+}
+
+.cell-description {
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 14px;
+    margin-top: -20px;
+    height: 25px;
+    line-height: 18px;
+    position: relative;
+    z-index: 30;
+}
+
+.cell-footer {
+    margin: -26px 1px 6px 1px;
+    height: 20px;
+    opacity: 1;
+    position: relative;
+    z-index: 25;
+    -webkit-border-radius: 0px 0px 4px 4px;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.cell-big {
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 465px; /* 277px */
+    padding: 5px;
+    border: 1px solid #666;
+    height: 307px; /* 217px */
+    line-height: 300px;
+    font-size: 30px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    position: relative;
+    z-index: 20;
+}
+
+.cell-buienradar {
+    overflow: hidden;
+}
+
+.cell-middle
+{ 
+    width: 184px;
+}
+
+.cell-date {
+    width: 560px;
+    font-size: 22px;
+    line-height: 35px;
+}
+
+#all { 
+    margin-left: -35px;
+    margin-top: 5px;
+    width: 1050px;height: 570px;
+}
+#popup_switch, #popup_protected, #popup_camera, #popup_camera1, #popup_camera2, #popup_camera3
+{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 75px;
+    margin-left: -150px;
+    margin-top: -100px;
+    padding: 10px;
+    border: 2px #c0c0c0;
+    background: #333;
+    z-index:1002;
+    overflow:visible;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-size: 25px;
+    color: #c0c0c0;
+    line-height: 75px;
+    text-align: center;
+    -webkit-border-radius: 15px 15px 15px 15px;
+    border-radius: 15px 15px 15px 15px;
+}
+#popup_camera, #popup_camera1, #popup_camera2, #popup_camera3
+{
+    width: 640px;
+    height: 480px;
+    margin-left: -325px;
+    margin-top: -245px;
+}
+#fade
+{
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index:1001;
+    -moz-opacity: 0.7;
+    opacity:.70;
+    filter: alpha(opacity=70);
+}
+.camera
+{
+    margin-left: -5px;
+    margin-top: -5px;
+    background: url(offline.jpg) no-repeat;
+    -moz-opacity: 0.7;
+    opacity:.70;
+    filter: alpha(opacity=70);
+    background-size: 272px 216px;
+    width: 475px;
+  /*height: 313px;*/
+}
+
+/*
+    Colorbox Core Style:
+    The following CSS is consistent between example themes and should not be altered.
+*/
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#cboxWrapper {max-width:none;}
+#cboxOverlay{position:fixed; width:100%; height:100%;}
+#cboxMiddleLeft, #cboxBottomLeft{clear:left;}
+#cboxContent{position:relative;}
+#cboxLoadedContent{overflow:auto; -webkit-overflow-scrolling: touch;}
+#cboxTitle{margin:0;}
+#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%; height:100%;}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
+.cboxPhoto{float:left; margin:auto; border:0; display:block; max-width:none; -ms-interpolation-mode:bicubic;}
+.cboxIframe{width:100%; height:100%; display:block; border:0; padding:0; margin:0;}
+#colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
+
+
+/* 
+    User Style:
+    Change the following styles to modify the appearance of Colorbox.  They are
+    ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#cboxOverlay{background:url(images/overlay.png) repeat 0 0; opacity: 0.9; filter: alpha(opacity = 90);}
+#colorbox{outline:0;}
+     #cboxContent{background:#fff; overflow:hidden;}
+
+a {
+outline-style:none;
+}
+
+#loading {
+   width: 1024px;
+   height: 750px;
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   margin-left: auto;
+   margin-right: auto;
+   display: block;
+   /* opacity: 0.9;
+   background-color: #fff; */
+   z-index: 99;
+   text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100px;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: auto; */
+  margin-bottom: auto;
+  z-index: 100;
+}
+#loading-image2 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 420px; /* 520px */
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: auto; */
+  margin-bottom: auto;
+  z-index: 100;
+}
