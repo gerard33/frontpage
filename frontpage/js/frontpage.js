@@ -637,32 +637,32 @@ function SwitchDimmer(idx, level)
 //Dimmer, only works with 1-16 dimmer for now
 function ChangeStatus(OpenDicht, level, idx, currentlevel)
 {
-	//When switched off return to previous level, no matter if plus or min pressed
-	if (level == txt_off) {
-		if (currentlevel == 1) {
-			currentlevel++;
-		}
+    //When switched off return to previous level, no matter if plus or min pressed
+    if (level == txt_off) {
+        if (currentlevel == 1) {
+            currentlevel++;
+        }
         DomoticzAction(idx, "switchlight", "Set%20Level", currentlevel);
-	} else {
-		level = level * 1;
-		//console.log(OpenDicht,level);
-		if (OpenDicht == "plus")
+    } else {
+        level = level * 1;
+        //console.log(OpenDicht,level);
+        if (OpenDicht == "plus")
         {
-			var d = ((level + 10) / 100 * 16) + 0.5;
-			//console.log("in plus",d,level);
-			if(d > 16) {
-				d = 16;
-			}
+            var d = ((level + 10) / 100 * 16) + 0.5;
+            //console.log("in plus",d,level);
+            if(d > 16) {
+                d = 16;
+            }
             DomoticzAction(idx, "switchlight", "Set%20Level", d);
-		} else {
-			var d = ((level - 0.1) / 100 * 16);
-			//console.log("in min",d,level);
-			if( d < 0 ) {
-				d = 0;
-			}
+        } else {
+            var d = ((level - 0.1) / 100 * 16);
+            //console.log("in min",d,level);
+            if( d < 0 ) {
+                d = 0;
+            }
             DomoticzAction(idx, "switchlight", "Set%20Level", d);
-		}
-	}
+        }
+    }
 }
 
 // zwave dimmer
@@ -922,11 +922,11 @@ function getLastSeen(dateString)
         (+dateArray[5]),
         (+dateArray[6])
     );
-    var convStringDate = dateObject.toString('d MMM');		// the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
-    var convStringDate = convStringDate.replace('Mar', 'Mrt'); 	// replace some months to NL abbrev
-    var convStringDate = convStringDate.replace('May', 'Mei'); 	// replace some months to NL abbrev
-    lastSeenArray["date"] = convStringDate.replace('Oct', 'Okt'); 	// replace some months to NL abbrev
-    lastSeenArray["time"] = dateObject.toString ('HH:mm');		// the part of the 'Last Seen' that creates the TIME
+    var convStringDate = dateObject.toString('d MMM');              // the part of the 'Last Seen' that creates the DATE, original dd-MM-yyyy
+    var convStringDate = convStringDate.replace('Mar', 'Mrt');      // replace some months to NL abbrev
+    var convStringDate = convStringDate.replace('May', 'Mei');      // replace some months to NL abbrev
+    lastSeenArray["date"] = convStringDate.replace('Oct', 'Okt');   // replace some months to NL abbrev
+    lastSeenArray["time"] = dateObject.toString ('HH:mm');          // the part of the 'Last Seen' that creates the TIME
 
     return lastSeenArray;
 }
