@@ -67,6 +67,7 @@ function RefreshData()
                         var vls = item["LastUpdate"];           // Last Seen
                         var vdataSuffix = '';                   // The extra info after the raw value (%, W, kWh, Lux...)
                         var lastSeenArray = getLastSeen(item["LastUpdate"]);
+                        var vdate = '';
 
                         //Added by GZ used for last seen to only show day if <> today
                         var thisday = (new Date()).toISOString().slice(0,10);
@@ -507,6 +508,7 @@ function RefreshData()
                             }
                         }
 
+                        var switchclick = '';
                         if (vdata == txt_off && vplusmin == 6) { //protect switch when on for vplusmin is 6
                             switchclick = 'onclick="SwitchToggle(' + item.idx + ', \'On\');lightbox_open(\'switch\', ' + switch_on_timeout + ', ' + txt_switch_on + ')"';
                             alarmcss = color_off;
