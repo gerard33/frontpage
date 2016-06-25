@@ -343,6 +343,48 @@ function RefreshData()
 		vdata = min.concat(hlp,plus);
 	}
 	
+	//Selector Switches
+	if(vtype == 'Selector') {
+		vdata = item['Level']; //get current level
+		var lvlnames = item['LevelNames'].split("|"); //get all levels
+		var countlevels = item['LevelNames'].split("|").length-1; //count the number of levels
+		var lvlindex;
+		if (item['Level'] == '0'){
+			lvlindex = 0;
+		}
+		else {
+			var temp = item['Level'] + "";
+			lvlindex = temp.slice(0, -1);
+		}
+		var LevelName = lvlnames[lvlindex];
+		if (LevelName == 'Off') {
+			LevelName = txt_off;
+		}
+		if(lvlindex == 0) { //switch is off
+			//var hlp = '<span onclick=BlindChangeStatus('plus', vdata, item.idx);lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+ vdata+'</span>';
+			//allow button to switch on
+			var hlp = '<span onclick="BlindChangeStatus(\'plus\', '+vdata+', '+item.idx+');lightbox_open(\'switch\', '+switch_on_timeout+', '+txt_switch_on+')"; style='+alarmcss+'>'+LevelName+'</span>';
+			var plus = ""; //no up when switch is off
+			var min = ""; //no down when switch is off
+			//var plus = "<img src=icons/up_off.png align=right vspace=12 width=30 onclick=BlindChangeStatus('plus'," +vdata+ "," + item.idx + ")>";
+			//var min = "<img src=icons/down_off.png align=left vspace=12 width=30>";
+		}
+		else { //switch is on
+			if (lvlindex == countlevels) { //max level, don't allow plus button to go to next level which isn't there
+				var plus = "<img src=icons/up.png align=right vspace=12 width=30>";
+			}
+			else {
+				var plus = "<img src=icons/up.png align=right vspace=12 width=30 onclick=BlindChangeStatus('plus'," +vdata+ "," + item.idx + ")>";
+			}
+			var min = "<img src=icons/down.png align=left vspace=12 width=30 onclick=BlindChangeStatus('min'," +vdata+ "," + item.idx + ")>";
+			//var hlp = '<span style='+vattr+'>'+LevelName+'</span>';
+			//allow button to switch off
+			var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+LevelName+'</span>';
+		}
+		//console.log(vdata);
+		vdata = min.concat(hlp,plus);
+	}
+	
 	//Blinds
 	if (item.SwitchType == 'Blinds') {
 		if(vdata == 'Closed') {
