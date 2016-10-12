@@ -19,7 +19,8 @@ function lightbox_close(id)
     $('#fade').fadeOut('fast');
 }
 
-function stringpad (string, maxlength) {
+function stringpad (string, maxlength)
+{
     string = string.toString();
     return string.length < maxlength ? stringpad("0" + string, maxlength) : string;
 }
@@ -138,9 +139,9 @@ function RefreshData()
                                             if(vplusmin == 5 && item.idx == idx_zdimmer) { //compare idx_zdimmer with z_whichdimmer if there are more zdimmers
                                                 //vdata = z_dimmer;
                                                 vdimmervalue = Math.round(vdimmervalue / 10)*10; //round to ten
-                                                if(z_dimmer == '') {		//when starting the frontpage
-                                                    vdata = vdimmervalue;	//show current dim value
-                                                } else if (z_dimmer != vdimmervalue) {						//when dimmer is changed
+                                                if(z_dimmer == '') {                    //when starting the frontpage
+                                                    vdata = vdimmervalue;               //show current dim value
+                                                } else if (z_dimmer != vdimmervalue) {  //when dimmer is changed
                                                         vdata = z_dimmer;
                                                         z_dimmer = vdimmervalue;
                                                 } else {
@@ -149,16 +150,13 @@ function RefreshData()
                                                 var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
                                                 var plus = "<img src=icons/up.png align=right vspace=12 onclick=ZWaveDim('plus'," + vdata + "," + item.idx + ")>";
                                                 var min = "<img src=icons/down.png align=left vspace=12 onclick=ZWaveDim('min'," + vdata + "," + item.idx + ")>";
-                                                //console.log(vdata + " | " + item.idx);
                                             }
                                             else {
-                                                //vdata = o_dimmer;
-                                                vdimmervalue = Math.round(vdimmervalue / 10)*10; //round to ten
+                                                vdimmervalue = Math.round(vdimmervalue / 10) * 10; //round to ten
                                                 vdata = vdimmervalue; //show current dim value
                                                 var hlp = '<span onclick="SwitchToggle('+item.idx+', \'Off\');lightbox_open(\'switch\', '+switch_off_timeout+', '+txt_switch_off+')"; style='+alarmcss+'>'+ vdata+'</span>';
                                                 var plus = "<img src=icons/up.png align=right vspace=12 onclick=BlindChangeStatus('plus'," + vdata + "," + item.idx + ")>";
                                                 var min = "<img src=icons/down.png align=left vspace=12 onclick=BlindChangeStatus('min'," + vdata + "," + item.idx + ")>";
-                                                //console.log(vdata + " | " + item.idx);
                                             }
                                     } else {
                                         //vdata2 = vdimmervalue; //used for ChangeStatus
@@ -527,13 +525,13 @@ function RefreshData()
 
                     switch ($.PageArray[ii][1]) {
                         case "Link":
-                            //var vtype=    $.PageArray[ii][1];     // Domoticz type (like Temp, Humidity)
-                            var vlabel=     $.PageArray[ii][2];     // cell number from HTML layout
-                            var vdata=      $.PageArray[ii][3];     // description (link in this case
-                            var vdesc =     '';
-                            //var vattr=    $.PageArray[ii][6];     // extra css attributes
-                            var valarm=     $.PageArray[ii][7];     // alarm value to turn text to red
-                            //var vdata=    item[vtype];            // current value
+                            //var vtype =    $.PageArray[ii][1];     // Domoticz type (like Temp, Humidity)
+                            var vlabel =     $.PageArray[ii][2];     // cell number from HTML layout
+                            var vdata =      $.PageArray[ii][3];     // description (link in this case
+                            var vdesc =      '';
+                            //var vattr =    $.PageArray[ii][6];     // extra css attributes
+                            var valarm =     $.PageArray[ii][7];     // alarm value to turn text to red
+                            //var vdata =    item[vtype];            // current value
                             $('#' + vlabel).html('<div>' + vdata + '</div>');
                             $('#desc_' + vlabel).html(vdesc);
                             break;
@@ -859,8 +857,7 @@ function currentTime()
    //haal jaar op
    var year = today.getFullYear();
    
-   var ret_str = day + " " + datum + " " + month + " " + year + "<br />" + h + ":" + m + "";
-   return ret_str;
+   return day + " " + datum + " " + month + " " + year + "<br />" + h + ":" + m + "";
 }
 
 function getWeatherData(vdata)

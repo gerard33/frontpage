@@ -18,7 +18,7 @@ It will take some time and a lot of trial and error but it is definitely worth i
 ## Installation instructions when using domoticz www folder
 1) copy the files from the frontpage map to domoticz/www so the frontpage.html and the subfolders file needs to be in domoticz/www
 
-2) edit frontpage_settings.js
+2) edit settings.js
    
 2a) edit url of domoticz
    
@@ -27,7 +27,7 @@ It will take some time and a lot of trial and error but it is definitely worth i
 ## Installation instructions when using webserver (eg Synology)
 1) copy the complete frontpage folder to /volume1/web
 
-2) edit frontpage_settings.js
+2) edit settings.js
 
 2a) edit url of domoticz
    
@@ -44,4 +44,4 @@ It will take some time and a lot of trial and error but it is definitely worth i
 
 5) Edit config.php in sonos folder, fill in the idx and the ip address
 
-6) Volume of Sonos can also be changed via the frontpage, in the frontpage_settings.js file set the plusmin button to value 2 (see the example)
+6) Volume of Sonos can also be changed via the frontpage, in the settings.js file set the plusmin button to value 2 (see the example)

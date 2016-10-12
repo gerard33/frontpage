@@ -31,7 +31,7 @@
 
     <script>
         $(document).ready(function () {
-//add arrows to swipe on desktop
+            //add arrows to swipe on desktop
             $("body").keydown(function (e) {
                 if (e.keyCode == 37) { // left
                     window.mySwipe.prev();
@@ -39,7 +39,8 @@
                     window.mySwipe.next();
                 }
             });
-//end of arrows
+            //end of arrows
+
             $(".iframe").colorbox({iframe: true, width: "550", height: "720", closeButton: false, opacity: .6});
             //Example of preserving a JavaScript event for inline calls.
             $("#click").click(function () {
@@ -521,8 +522,10 @@
     <div id="popup_switch"></div>
     <!-- <div id="popup_camera"><img src="http://192.168.1.1/videostream.cgi?user=user&pwd=password" onClick="lightbox_close('camera');" width="640" height="480" /></div> -->
     <!-- <div id="popup_camera"><img src="" onClick="lightbox_close('camera');" width="640" height="480" /></div> -->
-    <div id="popup_camera2"><img src="http://api.buienradar.nl/image/1.0/RadarMapNL?w=640&h=480"
-                                 onClick="lightbox_close('camera2');" class=''/></div>
+    <div id="popup_camera2">
+        <img src="http://api.buienradar.nl/image/1.0/RadarMapNL?w=640&h=480"
+                                 onClick="lightbox_close('camera2');" class=''/>
+    </div>
     <!-- <div id="popup_camera2"><img src="http://www.buienradar.nl/images.aspx?jaar=-3&soort=sp-loop&t="  onClick="lightbox_close('camera2');" width="640px" height="480px" onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 15000)' onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 1000)' class='' /></div> -->
     <!-- <div id="popup_camera2"><iframe src="http://mijn.buienradar.nl/lokalebuienradar.aspx?voor=1&lat=52.5167747&x=1&y=1&lng=6.0830219&overname=2&zoom=8&naam=zwolle&size=3&map=1" scrolling=no width=550 height=513 frameborder=no onClick="lightbox_close('camera2');"  /></iframe></div> -->
     <div id="fade"></div>
